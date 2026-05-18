@@ -56,7 +56,7 @@ const CarsCard = ({ car }) => {
             <span className="text-sm text-gray-400 font-medium">/day</span>
           </div>
           <Link
-            href={`/car-details/${car._id}`}
+            href={`/explore-cars/${car._id}`}
             className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-200"
           >
             Details
