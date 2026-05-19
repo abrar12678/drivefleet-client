@@ -89,6 +89,7 @@ const CarDetailsPage = () => {
       const bookingData = {
         carId: car._id,
         carName: car.carName,
+        carImage: car.image, // <-- ADD THIS
         userEmail: user.email,
         userName: user.name,
         dailyRentPrice: car.dailyRentPrice,

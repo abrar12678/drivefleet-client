@@ -63,7 +63,7 @@ const HeroSection = () => {
               />
             </Link>
             <Link
-              href="/register"
+              href="/sign-up"
               className="inline-flex items-center gap-2 px-7 py-3.5 text-gray-300 font-semibold rounded-xl border border-white/15 backdrop-blur-sm hover:bg-white/10 hover:text-white transition-all duration-300"
             >
               Join for Free
