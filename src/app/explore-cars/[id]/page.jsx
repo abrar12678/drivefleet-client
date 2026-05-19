@@ -82,32 +82,38 @@ const CarDetailsPage = () => {
     setIsModalOpen(true);
   };
 
-  // Submit booking — frontend only, you'll add the backend fetch
-  const handleBookingSubmit = () => {
+  // Submit booking
+  const handleBookingSubmit = async () => {
     setBookingLoading(true);
+    try {
+      const bookingData = {
+        carId: car._id,
+        carName: car.carName,
+        userEmail: user.email,
+        userName: user.name,
+        dailyRentPrice: car.dailyRentPrice,
+        driverNeeded,
+        specialNote,
+        bookingDate: new Date().toISOString(),
+      };
+      const res = await fetch("http://localhost:5000/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bookingData),
+      });
 
-    // --- YOUR BACKEND CODE GOES HERE ---
-    // const bookingData = {
-    //   carId: car._id,
-    //   carName: car.carName,
-    //   userEmail: user.email,
-    //   userName: user.name,
-    //   dailyRentPrice: car.dailyRentPrice,
-    //   driverNeeded,
-    //   specialNote,
-    //   bookingDate: new Date().toISOString(),
-    // };
-    // const res = await fetch("http://localhost:5000/book-car", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(bookingData),
-    // });
-
-    setTimeout(() => {
+      if (res.ok) {
+        closeModal();
+        alert("Car booked successfully!");
+      } else {
+        alert("Booking failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Booking error:", err);
+      alert("Something went wrong. Please try again.");
+    } finally {
       setBookingLoading(false);
-      closeModal();
-      alert("Car booked successfully!");
-    }, 1000);
+    }
   };
 
   if (loading) {
