@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { authClient } from "@/lib/auth-client";
 
 const carTypes = [
   "SUV",
@@ -13,6 +14,7 @@ const carTypes = [
 ];
 
 const AddCarPage = () => {
+  const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     carName: "",
     dailyRentPrice: "",
@@ -25,6 +27,18 @@ const AddCarPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await authClient.getSession();
+        setUser(data?.user || null);
+      } catch (err) {
+        setUser(null);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -44,6 +58,7 @@ const AddCarPage = () => {
         seatCapacity: Number(formData.seatCapacity),
         availability: formData.availability === "true",
         bookingCount: 0,
+        addedByEmail: user?.email,
       }),
     });
 
