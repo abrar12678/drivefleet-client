@@ -114,12 +114,11 @@ const SignUpPage = () => {
 
             <TextField
               isRequired
-              minLength={8}
               name="password"
               type="password"
               validate={(value) => {
-                if (value.length < 8)
-                  return "Password must be at least 8 characters";
+                if (value.length < 6)
+                  return "Password must be at least 6 characters";
                 if (!/[A-Z]/.test(value))
                   return "Must contain at least one uppercase letter";
                 if (!/[a-z]/.test(value))
@@ -134,7 +133,8 @@ const SignUpPage = () => {
                 radius="lg"
               />
               <Description>
-                Must be at least 8 characters with 1 uppercase and 1 lowercase
+                Must be at least 6 characters with 1 uppercase and 1 lowercase
+                letter
               </Description>
               <FieldError />
             </TextField>
