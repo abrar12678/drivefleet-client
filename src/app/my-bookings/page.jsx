@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
+import { Spinner } from "@heroui/react";
 
 const MyBookingsPage = () => {
   const [user, setUser] = useState(null);
@@ -28,7 +29,7 @@ const MyBookingsPage = () => {
 
     const fetchBookings = async () => {
       try {
-        // ✅ Get JWT token from Better Auth client (same as your mentor)
+        // ✅ Get JWT token from Better Auth client
         const { data: tokenData } = await authClient.token();
         const token = tokenData?.token;
 
@@ -58,7 +59,7 @@ const MyBookingsPage = () => {
   if (!user && loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+        <Spinner size="lg" label="Loading your bookings..." />
       </div>
     );
   }

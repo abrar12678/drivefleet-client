@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
+import { Spinner } from "@heroui/react";
 
 const carTypes = [
   "SUV",
@@ -279,7 +280,7 @@ const AddCarPage = () => {
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <Spinner size="sm" color="white" />
                 Adding Car...
               </span>
             ) : (

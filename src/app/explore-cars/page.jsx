@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import CarsCard from "@/components/CarsCard";
 import { Search } from "lucide-react";
+import { Spinner } from "@heroui/react";
 
 const carTypes = [
   "Sedan",
@@ -110,7 +111,7 @@ const ExploreCarsPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+            <Spinner size="lg" label="Loading cars..." />
           </div>
         ) : cars.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

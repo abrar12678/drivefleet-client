@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { Spinner } from "@heroui/react";
 
 const MyAddedCarsPage = () => {
   const [user, setUser] = useState(null);
@@ -165,7 +166,7 @@ const MyAddedCarsPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+        <Spinner size="lg" label="Loading your cars..." />
       </div>
     );
   }
@@ -481,7 +482,7 @@ const MyAddedCarsPage = () => {
               >
                 {updateLoading ? (
                   <span className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <Spinner size="sm" color="white" />
                     Updating...
                   </span>
                 ) : (
@@ -556,7 +557,7 @@ const MyAddedCarsPage = () => {
                 >
                   {deleteLoading ? (
                     <span className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <Spinner size="sm" color="white" />
                       Deleting...
                     </span>
                   ) : (
