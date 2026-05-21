@@ -57,7 +57,7 @@ const AddCarPage = () => {
       console.log("Token:", tokenData);
       const token = tokenData?.token;
 
-      const res = await fetch("http://localhost:5000/add-car", {
+      const res = await fetch(`${process.env.NEXT_SERVER_URL}/add-car`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

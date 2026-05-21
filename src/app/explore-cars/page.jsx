@@ -26,7 +26,7 @@ const ExploreCarsPage = () => {
     if (search) params.set("search", search);
     if (typeFilter !== "All") params.set("type", typeFilter);
 
-    fetch(`http://localhost:5000/explore-cars?${params.toString()}`)
+    fetch(`${process.env.NEXT_SERVER_URL}/explore-cars?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => {
         setCars(data);

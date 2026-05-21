@@ -10,7 +10,7 @@ const AvailableCars = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/explore-cars")
+    fetch(`${process.env.NEXT_SERVER_URL}/explore-cars`)
       .then((res) => res.json())
       .then((data) => {
         const available = data

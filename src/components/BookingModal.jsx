@@ -30,7 +30,7 @@ const BookingModal = ({ car, user, isOpen, onClose }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/bookings", {
+      const res = await fetch(`${process.env.NEXT_SERVER_URL}/bookings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -12,7 +12,7 @@ const CarDetailsPage = async ({ params }) => {
 
   let car = null;
   try {
-    const res = await fetch(`http://localhost:5000/explore-cars/${id}`, {
+    const res = await fetch(`${process.env.NEXT_SERVER_URL}/explore-cars/${id}`, {
       cache: "no-store",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -33,11 +33,6 @@ const CarDetailsPage = async ({ params }) => {
     user = null;
   }
 
-  export async function generateMetadata({ params }) {
-    return {
-      title: "Car Details | DriveFleet",
-    };
-  }
 
   if (!car) {
     return (

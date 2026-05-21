@@ -36,7 +36,7 @@ const MyBookingsPage = () => {
         const token = tokenData?.token;
 
         const res = await fetch(
-          `http://localhost:5000/bookings?email=${user.email}`,
+          `${process.env.NEXT_SERVER_URL}/bookings?email=${user.email}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

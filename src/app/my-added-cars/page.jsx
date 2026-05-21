@@ -45,7 +45,7 @@ const MyAddedCarsPage = () => {
         const token = tokenData?.token;
 
         const res = await fetch(
-          `http://localhost:5000/my-cars?email=${user.email}`,
+          `${process.env.NEXT_SERVER_URL}/my-cars?email=${user.email}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -90,7 +90,7 @@ const MyAddedCarsPage = () => {
       const token = tokenData?.token;
 
       const { _id, ...fields } = updateCar;
-      const res = await fetch(`http://localhost:5000/update-car/${_id}`, {
+      const res = await fetch(`${process.env.NEXT_SERVER_URL}/update-car/${_id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ const MyAddedCarsPage = () => {
         setIsUpdateOpen(false);
         setUpdateCar(null);
         const refreshed = await fetch(
-          `http://localhost:5000/my-cars?email=${user.email}`,
+          `${process.env.NEXT_SERVER_URL}/my-cars?email=${user.email}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -133,7 +133,7 @@ const MyAddedCarsPage = () => {
       const token = tokenData?.token;
 
       const res = await fetch(
-        `http://localhost:5000/delete-car/${deleteCar._id}`,
+        `${process.env.NEXT_SERVER_URL}/delete-car/${deleteCar._id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
