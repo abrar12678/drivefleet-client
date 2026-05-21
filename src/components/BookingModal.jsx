@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { Spinner } from "@heroui/react";
+import { toast } from "react-toastify";
 
 const BookingModal = ({ car, user, isOpen, onClose }) => {
   const [driverNeeded, setDriverNeeded] = useState(false);
@@ -45,13 +47,13 @@ const BookingModal = ({ car, user, isOpen, onClose }) => {
       });
       if (res.ok) {
         onClose();
-        alert("Car booked successfully!");
+        toast.success("Car booked successfully!");
       } else {
-        alert("Booking failed. Please try again.");
+        toast.error("Booking failed. Please try again.");
       }
     } catch (err) {
       console.error("Booking error:", err);
-      alert("Something went wrong.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -248,7 +250,7 @@ const BookingModal = ({ car, user, isOpen, onClose }) => {
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <Spinner size="sm" color="white" />
                 Booking...
               </span>
             ) : (

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Spinner } from "@heroui/react";
+import { toast } from "react-toastify";
 
 const carTypes = [
   "SUV",
@@ -87,9 +88,13 @@ const AddCarPage = () => {
           description: "",
           availability: "true",
         });
+        toast.success("Car added successfully!");
+      } else {
+        toast.error("Failed to add car. Please try again.");
       }
     } catch (err) {
       console.error("Add car error:", err);
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

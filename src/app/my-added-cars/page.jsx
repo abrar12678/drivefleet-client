@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { Spinner } from "@heroui/react";
+import { toast } from "react-toastify";
 
 const MyAddedCarsPage = () => {
   const [user, setUser] = useState(null);
@@ -118,11 +119,11 @@ const MyAddedCarsPage = () => {
         if (Array.isArray(refreshedData)) {
           setCars(refreshedData);
         }
-        alert("Car updated successfully!");
+        toast.success("Car updated successfully!");
       }
     } catch (err) {
       console.error("Update error:", err);
-      alert("Update failed. Please try again.");
+      toast.error("Update failed. Please try again.");
     } finally {
       setUpdateLoading(false);
     }
@@ -154,10 +155,11 @@ const MyAddedCarsPage = () => {
         setIsDeleteOpen(false);
         setDeleteCar(null);
         setCars((prev) => prev.filter((c) => c._id !== deleteCar._id));
+        toast.success("Car deleted successfully!");
       }
     } catch (err) {
       console.error("Delete error:", err);
-      alert("Delete failed. Please try again.");
+      toast.error("Delete failed. Please try again.");
     } finally {
       setDeleteLoading(false);
     }
