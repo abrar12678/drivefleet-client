@@ -23,17 +23,29 @@ const MyBookingsPage = () => {
     fetchUser();
   }, []);
 
-  // Fetch bookings when user is available
   useEffect(() => {
     if (!user) return;
 
     const fetchBookings = async () => {
       try {
+        // ✅ Get JWT token from Better Auth client (same as your mentor)
+        const { data: tokenData } = await authClient.token();
+        const token = tokenData?.token;
+
         const res = await fetch(
           `http://localhost:5000/bookings?email=${user.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
         const data = await res.json();
-        setBookings(data);
+        if (Array.isArray(data)) {
+          setBookings(data);
+        } else {
+          setBookings([]);
+        }
       } catch (err) {
         console.error("Fetch bookings error:", err);
       } finally {

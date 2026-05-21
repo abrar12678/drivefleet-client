@@ -34,16 +34,28 @@ const MyAddedCarsPage = () => {
     fetchUser();
   }, []);
 
-  // Fetch user's cars
+  // ✅ Fetch user's cars — with JWT
   useEffect(() => {
     if (!user) return;
     const fetchCars = async () => {
       try {
+        const { data: tokenData } = await authClient.token();
+        const token = tokenData?.token;
+
         const res = await fetch(
           `http://localhost:5000/my-cars?email=${user.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
         const data = await res.json();
-        setCars(data);
+        if (Array.isArray(data)) {
+          setCars(data);
+        } else {
+          setCars([]);
+        }
       } catch (err) {
         console.error("Fetch cars error:", err);
       } finally {
@@ -74,14 +86,20 @@ const MyAddedCarsPage = () => {
     setUpdateCar((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Submit update
+  // ✅ Submit update — with JWT
   const handleUpdateSubmit = async () => {
     setUpdateLoading(true);
     try {
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
+
       const { _id, ...fields } = updateCar;
       const res = await fetch(`http://localhost:5000/update-car/${_id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(fields),
       });
       if (res.ok) {
@@ -89,8 +107,16 @@ const MyAddedCarsPage = () => {
         setUpdateCar(null);
         const refreshed = await fetch(
           `http://localhost:5000/my-cars?email=${user.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
-        setCars(await refreshed.json());
+        const refreshedData = await refreshed.json();
+        if (Array.isArray(refreshedData)) {
+          setCars(refreshedData);
+        }
         alert("Car updated successfully!");
       }
     } catch (err) {
@@ -107,13 +133,21 @@ const MyAddedCarsPage = () => {
     setIsDeleteOpen(true);
   };
 
-  // Confirm delete
+  // ✅ Confirm delete — with JWT
   const handleDeleteConfirm = async () => {
     setDeleteLoading(true);
     try {
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
+
       const res = await fetch(
         `http://localhost:5000/delete-car/${deleteCar._id}`,
-        { method: "DELETE" },
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       if (res.ok) {
         setIsDeleteOpen(false);

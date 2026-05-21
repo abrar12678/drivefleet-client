@@ -10,7 +10,7 @@ export async function proxy(request) {
   });
 
   if (!session) {
-    return NextResponse.redirect(new URL("sign-in", request.url));
+    return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 }
 
@@ -18,5 +18,5 @@ export async function proxy(request) {
 // export default function proxy(request) { ... }
 
 export const config = {
-  matcher: ["/my-bookings", "/my-added-cars", "/add-car"],
+  matcher: ["/my-bookings", "/my-added-cars", "/add-car", "/explore-cars/:path"],
 };

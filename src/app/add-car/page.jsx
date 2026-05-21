@@ -49,34 +49,49 @@ const AddCarPage = () => {
     setLoading(true);
     setSuccess("");
 
-    const res = await fetch("http://localhost:5000/add-car", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...formData,
-        dailyRentPrice: Number(formData.dailyRentPrice),
-        seatCapacity: Number(formData.seatCapacity),
-        availability: formData.availability === "true",
-        bookingCount: 0,
-        addedByEmail: user?.email,
-      }),
-    });
+    try {
+      // ✅ Get JWT token
+      const { data: tokenData } = await authClient.token();
+      console.log("Token:", tokenData);
+      const token = tokenData?.token;
 
-    const data = await res.json();
-    if (data.insertedId) {
-      setSuccess("Car added successfully!");
-      setFormData({
-        carName: "",
-        dailyRentPrice: "",
-        carType: "",
-        image: "",
-        seatCapacity: "",
-        pickupLocation: "",
-        description: "",
-        availability: "true",
+      const res = await fetch("http://localhost:5000/add-car", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ...formData,
+          dailyRentPrice: Number(formData.dailyRentPrice),
+          seatCapacity: Number(formData.seatCapacity),
+          availability: formData.availability === "true",
+          bookingCount: 0,
+          addedByEmail: user?.email,
+        }),
       });
+
+      const data = await res.json();
+      console.log("Response:", data);
+
+      if (data.insertedId) {
+        setSuccess("Car added successfully!");
+        setFormData({
+          carName: "",
+          dailyRentPrice: "",
+          carType: "",
+          image: "",
+          seatCapacity: "",
+          pickupLocation: "",
+          description: "",
+          availability: "true",
+        });
+      }
+    } catch (err) {
+      console.error("Add car error:", err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const inputClass =
