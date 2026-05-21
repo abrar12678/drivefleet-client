@@ -11,19 +11,20 @@ const MyAddedCarsPage = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Update modal
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [updateCar, setUpdateCar] = useState(null);
   const [updateLoading, setUpdateLoading] = useState(false);
 
-  // Delete modal
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteCar, setDeleteCar] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const deleteModalRef = useRef(null);
   const updateModalRef = useRef(null);
 
-  // Fetch logged-in user
+  useEffect(() => {
+    document.title = "My Cars | DriveFleet";
+  }, []);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -36,7 +37,6 @@ const MyAddedCarsPage = () => {
     fetchUser();
   }, []);
 
-  // ✅ Fetch user's cars — with JWT
   useEffect(() => {
     if (!user) return;
     const fetchCars = async () => {
@@ -47,9 +47,7 @@ const MyAddedCarsPage = () => {
         const res = await fetch(
           `http://localhost:5000/my-cars?email=${user.email}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           },
         );
         const data = await res.json();
@@ -67,7 +65,6 @@ const MyAddedCarsPage = () => {
     fetchCars();
   }, [user]);
 
-  // Lock body scroll when any modal is open
   useEffect(() => {
     if (isUpdateOpen || isDeleteOpen) {
       document.body.style.overflow = "hidden";
@@ -77,18 +74,15 @@ const MyAddedCarsPage = () => {
     };
   }, [isUpdateOpen, isDeleteOpen]);
 
-  // Open update modal
   const openUpdateModal = (car) => {
     setUpdateCar({ ...car });
     setIsUpdateOpen(true);
   };
 
-  // Handle update form change
   const handleUpdateChange = (field, value) => {
     setUpdateCar((prev) => ({ ...prev, [field]: value }));
   };
 
-  // ✅ Submit update — with JWT
   const handleUpdateSubmit = async () => {
     setUpdateLoading(true);
     try {
@@ -110,9 +104,7 @@ const MyAddedCarsPage = () => {
         const refreshed = await fetch(
           `http://localhost:5000/my-cars?email=${user.email}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           },
         );
         const refreshedData = await refreshed.json();
@@ -129,13 +121,11 @@ const MyAddedCarsPage = () => {
     }
   };
 
-  // Open delete modal
   const openDeleteModal = (car) => {
     setDeleteCar(car);
     setIsDeleteOpen(true);
   };
 
-  // ✅ Confirm delete — with JWT
   const handleDeleteConfirm = async () => {
     setDeleteLoading(true);
     try {
@@ -146,9 +136,7 @@ const MyAddedCarsPage = () => {
         `http://localhost:5000/delete-car/${deleteCar._id}`,
         {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         },
       );
       if (res.ok) {
@@ -176,8 +164,8 @@ const MyAddedCarsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        {/* ── Page Header ── */}
+        <div className="animate-fade-up flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               My Added Cars
@@ -188,29 +176,32 @@ const MyAddedCarsPage = () => {
           </div>
           <Link
             href="/add-car"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors w-fit"
+            className="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold shadow-md shadow-blue-200 hover:shadow-lg hover:shadow-blue-300 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-fit overflow-hidden"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            Add New Car
+            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
+            <span className="relative z-10 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Add New Car
+            </span>
           </Link>
         </div>
 
-        {/* Empty State */}
+        {/* ── Empty State ── */}
         {cars.length === 0 && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+          <div className="animate-scale-in bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
             <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -235,53 +226,55 @@ const MyAddedCarsPage = () => {
             </p>
             <Link
               href="/add-car"
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold shadow-md shadow-blue-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
             >
               Add Car
             </Link>
           </div>
         )}
 
-        {/* Cars Grid */}
+        {/* ── Cars Grid ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cars.map((car) => (
+          {cars.map((car, index) => (
             <div
               key={car._id}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+              className="animate-fade-up group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-blue-100/50 hover:-translate-y-2 hover:border-blue-100 transition-all duration-300"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Image */}
-              <div className="relative h-48 bg-gray-200">
+              <div className="relative h-48 bg-gray-200 overflow-hidden">
                 <Image
                   src={car.image}
                   alt={car.carName}
                   fill
-                  className="object-cover"
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span
-                  className={`absolute top-3 left-3 px-2.5 py-1 text-xs font-semibold rounded-lg ${
+                  className={`absolute top-3 left-3 px-2.5 py-1 text-xs font-semibold rounded-lg shadow-sm ${
                     car.availability
-                      ? "bg-emerald-500 text-white"
-                      : "bg-red-500 text-white"
+                      ? "bg-emerald-500 text-white shadow-emerald-200"
+                      : "bg-red-500 text-white shadow-red-200"
                   }`}
                 >
                   {car.availability ? "Available" : "Unavailable"}
                 </span>
-                <span className="absolute top-3 right-3 px-2.5 py-1 bg-blue-600 text-white text-xs font-semibold rounded-lg">
+                <span className="absolute top-3 right-3 px-2.5 py-1 bg-blue-600 text-white text-xs font-semibold rounded-lg shadow-sm shadow-blue-200">
                   {car.carType}
                 </span>
               </div>
 
               {/* Info */}
               <div className="p-5">
-                <h3 className="text-lg font-bold text-gray-900 mb-1 truncate">
+                <h3 className="text-lg font-bold text-gray-900 mb-1 truncate group-hover:text-blue-700 transition-colors duration-200">
                   {car.carName}
                 </h3>
-                <p className="text-sm text-gray-500 mb-3">
+                <p className="text-sm text-gray-500 mb-3 group-hover:text-gray-600 transition-colors duration-200">
                   {car.pickupLocation} &bull; {car.seatCapacity} Seats
                 </p>
                 <div className="flex items-center justify-between mb-1">
-                  <p className="text-lg font-bold text-blue-600">
+                  <p className="text-lg font-bold text-blue-600 group-hover:scale-105 transition-transform duration-200">
                     ${car.dailyRentPrice}
                     <span className="text-xs font-normal text-gray-400">
                       /day
@@ -300,13 +293,13 @@ const MyAddedCarsPage = () => {
                 <div className="flex gap-2">
                   <button
                     onClick={() => openUpdateModal(car)}
-                    className="flex-1 py-2 rounded-xl text-sm font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50 transition-colors"
+                    className="flex-1 py-2 rounded-xl text-sm font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50 hover:border-blue-300 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
                   >
                     Update
                   </button>
                   <button
                     onClick={() => openDeleteModal(car)}
-                    className="flex-1 py-2 rounded-xl text-sm font-semibold text-red-600 border border-red-200 hover:bg-red-50 transition-colors"
+                    className="flex-1 py-2 rounded-xl text-sm font-semibold text-red-600 border border-red-200 hover:bg-red-50 hover:border-red-300 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
                   >
                     Delete
                   </button>
@@ -349,7 +342,7 @@ const MyAddedCarsPage = () => {
                     setIsUpdateOpen(false);
                     setUpdateCar(null);
                   }}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 hover:rotate-90 transition-all duration-300"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -371,17 +364,40 @@ const MyAddedCarsPage = () => {
 
             {/* Body */}
             <div className="px-6 py-5 space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-1.5">
-                  Image URL
-                </label>
-                <input
-                  type="url"
-                  value={updateCar.image || ""}
-                  onChange={(e) => handleUpdateChange("image", e.target.value)}
-                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl hover:border-blue-400 focus:outline-none focus:border-blue-500 transition-colors"
-                />
-              </div>
+              {[
+                { label: "Image URL", key: "image", type: "url" },
+                {
+                  label: "Daily Rent Price ($)",
+                  key: "dailyRentPrice",
+                  type: "number",
+                },
+                {
+                  label: "Pickup Location",
+                  key: "pickupLocation",
+                  type: "text",
+                },
+              ].map(({ label, key, type }) => (
+                <div key={key}>
+                  <label className="block text-sm font-semibold text-gray-900 mb-1.5">
+                    {label}
+                  </label>
+                  <input
+                    type={type}
+                    value={
+                      updateCar[key] || (key === "dailyRentPrice" ? "" : "")
+                    }
+                    onChange={(e) =>
+                      handleUpdateChange(
+                        key,
+                        type === "number"
+                          ? Number(e.target.value)
+                          : e.target.value,
+                      )
+                    }
+                    className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-200"
+                  />
+                </div>
+              ))}
 
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-1.5">
@@ -392,7 +408,7 @@ const MyAddedCarsPage = () => {
                   onChange={(e) =>
                     handleUpdateChange("carType", e.target.value)
                   }
-                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl hover:border-blue-400 focus:outline-none focus:border-blue-500 transition-colors bg-white"
+                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-200 bg-white cursor-pointer"
                 >
                   <option value="SUV">SUV</option>
                   <option value="Sedan">Sedan</option>
@@ -402,34 +418,6 @@ const MyAddedCarsPage = () => {
                   <option value="Truck">Truck</option>
                   <option value="Van">Van</option>
                 </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-1.5">
-                  Daily Rent Price ($)
-                </label>
-                <input
-                  type="number"
-                  value={updateCar.dailyRentPrice || ""}
-                  onChange={(e) =>
-                    handleUpdateChange("dailyRentPrice", Number(e.target.value))
-                  }
-                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl hover:border-blue-400 focus:outline-none focus:border-blue-500 transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-1.5">
-                  Pickup Location
-                </label>
-                <input
-                  type="text"
-                  value={updateCar.pickupLocation || ""}
-                  onChange={(e) =>
-                    handleUpdateChange("pickupLocation", e.target.value)
-                  }
-                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl hover:border-blue-400 focus:outline-none focus:border-blue-500 transition-colors"
-                />
               </div>
 
               <div>
@@ -444,7 +432,7 @@ const MyAddedCarsPage = () => {
                       e.target.value === "true",
                     )
                   }
-                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl hover:border-blue-400 focus:outline-none focus:border-blue-500 transition-colors bg-white"
+                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-200 bg-white cursor-pointer"
                 >
                   <option value="true">Available</option>
                   <option value="false">Unavailable</option>
@@ -461,7 +449,7 @@ const MyAddedCarsPage = () => {
                     handleUpdateChange("description", e.target.value)
                   }
                   rows={4}
-                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl hover:border-blue-400 focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-200 resize-none"
                 />
               </div>
             </div>
@@ -473,14 +461,14 @@ const MyAddedCarsPage = () => {
                   setIsUpdateOpen(false);
                   setUpdateCar(null);
                 }}
-                className="flex-1 py-3 rounded-xl text-sm font-semibold text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
+                className="flex-1 py-3 rounded-xl text-sm font-semibold text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpdateSubmit}
                 disabled={updateLoading}
-                className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-200 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-300 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
               >
                 {updateLoading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -513,7 +501,7 @@ const MyAddedCarsPage = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6 text-center">
-              <div className="w-16 h-16 mx-auto rounded-full bg-red-100 flex items-center justify-center mb-4">
+              <div className="w-16 h-16 mx-auto rounded-full bg-red-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-8 h-8 text-red-500"
@@ -548,14 +536,14 @@ const MyAddedCarsPage = () => {
                     setIsDeleteOpen(false);
                     setDeleteCar(null);
                   }}
-                  className="flex-1 py-3 rounded-xl text-sm font-semibold text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
+                  className="flex-1 py-3 rounded-xl text-sm font-semibold text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleDeleteConfirm}
                   disabled={deleteLoading}
-                  className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700 hover:shadow-lg hover:shadow-red-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
                 >
                   {deleteLoading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -572,7 +560,6 @@ const MyAddedCarsPage = () => {
         </div>
       )}
 
-      {/* Keyframes */}
       <style jsx>{`
         @keyframes fadeIn {
           from {

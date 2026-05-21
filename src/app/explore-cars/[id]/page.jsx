@@ -35,6 +35,12 @@ const CarDetailsPage = async ({ params }) => {
     user = null;
   }
 
+  export async function generateMetadata({ params }) {
+    return {
+      title: "Car Details | DriveFleet",
+    };
+  }
+
   if (!car) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">

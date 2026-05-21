@@ -104,6 +104,10 @@ const AddCarPage = () => {
     "w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-0 outline-none transition-colors";
   const labelClass = "block text-sm font-semibold text-gray-700 mb-2";
 
+  useEffect(() => {
+    document.title = "Add New Car | DriveFleet";
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

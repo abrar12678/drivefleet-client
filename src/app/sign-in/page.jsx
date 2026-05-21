@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import {
   Card,
   Button,
@@ -56,6 +57,10 @@ const SignInPage = () => {
   const handleGoogleSignin = async () => {
     await authClient.signIn.social({ provider: "google" });
   };
+
+  useEffect(() => {
+    document.title = "Sign In | DriveFleet";
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">

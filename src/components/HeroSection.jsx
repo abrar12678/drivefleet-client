@@ -17,26 +17,39 @@ const HeroSection = () => {
         <img
           src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80"
           alt="Luxury car on road"
-          className="w-full h-full object-cover opacity-40"
+          className="w-full h-full object-cover opacity-40 animate-hero-img"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-950/80 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-gray-950/50" />
+
+        {/* Animated floating orbs */}
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] animate-float" />
+        <div
+          className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-indigo-500/10 rounded-full blur-[80px] animate-float"
+          style={{ animationDelay: "2s" }}
+        />
       </div>
 
       {/* ── Content ── */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="max-w-2xl">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-blue-300 text-xs font-medium uppercase tracking-widest mb-6">
+          <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-blue-300 text-xs font-medium uppercase tracking-widest mb-6 animate-fade-up hover:bg-white/15 hover:border-white/20 hover:scale-105 transition-all duration-300 cursor-default"
+            style={{ animationDelay: "0.2s" }}
+          >
             <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
             Drive Your Dream Car Today
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-[1.1] mb-6">
+          <h1
+            className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-[1.1] mb-6 animate-fade-up"
+            style={{ animationDelay: "0.4s" }}
+          >
             Find Your
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 bg-[length:200%_auto] hover:bg-[length:100%_auto] transition-all duration-700">
               Perfect Ride
             </span>
             <br />
@@ -44,44 +57,67 @@ const HeroSection = () => {
           </h1>
 
           {/* Description */}
-          <p className="text-base sm:text-lg text-gray-300 leading-relaxed mb-8 max-w-lg">
+          <p
+            className="text-base sm:text-lg text-gray-300 leading-relaxed mb-8 max-w-lg animate-fade-up"
+            style={{ animationDelay: "0.6s" }}
+          >
             Browse through our collection of premium vehicles at unbeatable
             prices. From city commutes to road trips, DriveFleet has the right
             car waiting for you.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-14">
+          <div
+            className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-14 animate-fade-up"
+            style={{ animationDelay: "0.8s" }}
+          >
             <Link
               href="/explore-cars"
-              className="group inline-flex items-center gap-2.5 px-7 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-[1.02] transition-all duration-300"
+              className="group relative inline-flex items-center gap-2.5 px-7 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/40 hover:scale-[1.04] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 overflow-hidden"
             >
-              Explore Cars
-              <ArrowRight
-                size={18}
-                className="group-hover:translate-x-1 transition-transform duration-300"
-              />
+              {/* Shine sweep on hover */}
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              <span className="relative z-10 flex items-center gap-2.5">
+                Explore Cars
+                <ArrowRight
+                  size={18}
+                  className="group-hover:translate-x-1.5 group-hover:scale-110 transition-all duration-300"
+                />
+              </span>
             </Link>
             <Link
               href="/sign-up"
-              className="inline-flex items-center gap-2 px-7 py-3.5 text-gray-300 font-semibold rounded-xl border border-white/15 backdrop-blur-sm hover:bg-white/10 hover:text-white transition-all duration-300"
+              className="group inline-flex items-center gap-2 px-7 py-3.5 text-gray-300 font-semibold rounded-xl border border-white/15 backdrop-blur-sm hover:bg-white/10 hover:text-white hover:border-white/30 hover:scale-[1.03] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-white/5 active:scale-[0.98] transition-all duration-300"
             >
+              <span className="w-0 group-hover:w-2 h-2 rounded-full bg-blue-400 transition-all duration-300" />
               Join for Free
             </Link>
           </div>
 
           {/* Stats */}
-          <div className="flex items-center gap-8 sm:gap-12">
-            {stats.map(({ Icon, value, label }) => (
-              <div key={label} className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-                  <Icon size={18} className="text-blue-400" />
+          <div
+            className="flex flex-wrap items-center gap-6 sm:gap-10 animate-fade-up"
+            style={{ animationDelay: "1s" }}
+          >
+            {stats.map(({ Icon, value, label }, index) => (
+              <div
+                key={label}
+                className="group/stat flex items-center gap-3 p-3 -mx-3 rounded-xl cursor-default hover:bg-white/5 transition-all duration-300"
+                style={{ animationDelay: `1s + ${index * 0.15}s` }}
+              >
+                <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover/stat:scale-110 group-hover/stat:bg-blue-500/15 group-hover/stat:border-blue-400/30 transition-all duration-300">
+                  <Icon
+                    size={18}
+                    className="text-blue-400 group-hover/stat:text-blue-300 transition-colors duration-300"
+                  />
                 </div>
-                <div>
-                  <p className="text-white font-bold text-lg leading-tight">
+                <div className="group-hover/stat:translate-x-1 transition-transform duration-300">
+                  <p className="text-white font-bold text-lg leading-tight group-hover/stat:text-blue-50 transition-colors duration-300">
                     {value}
                   </p>
-                  <p className="text-gray-500 text-xs font-medium">{label}</p>
+                  <p className="text-gray-500 text-xs font-medium group-hover/stat:text-gray-400 transition-colors duration-300">
+                    {label}
+                  </p>
                 </div>
               </div>
             ))}

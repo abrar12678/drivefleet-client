@@ -138,29 +138,66 @@ const colorMap = {
     bg: "bg-emerald-100",
     text: "text-emerald-600",
     shadow: "shadow-emerald-100",
+    glow: "group-hover:shadow-emerald-500/20",
+    border: "hover:border-emerald-400/30",
+    iconHover: "group-hover:bg-emerald-500",
   },
-  blue: { bg: "bg-blue-100", text: "text-blue-600", shadow: "shadow-blue-100" },
+  blue: {
+    bg: "bg-blue-100",
+    text: "text-blue-600",
+    shadow: "shadow-blue-100",
+    glow: "group-hover:shadow-blue-500/20",
+    border: "hover:border-blue-400/30",
+    iconHover: "group-hover:bg-blue-500",
+  },
   purple: {
     bg: "bg-purple-100",
     text: "text-purple-600",
     shadow: "shadow-purple-100",
+    glow: "group-hover:shadow-purple-500/20",
+    border: "hover:border-purple-400/30",
+    iconHover: "group-hover:bg-purple-500",
   },
   amber: {
     bg: "bg-amber-100",
     text: "text-amber-600",
     shadow: "shadow-amber-100",
+    glow: "group-hover:shadow-amber-500/20",
+    border: "hover:border-amber-400/30",
+    iconHover: "group-hover:bg-amber-500",
   },
-  red: { bg: "bg-red-100", text: "text-red-600", shadow: "shadow-red-100" },
-  teal: { bg: "bg-teal-100", text: "text-teal-600", shadow: "shadow-teal-100" },
+  red: {
+    bg: "bg-red-100",
+    text: "text-red-600",
+    shadow: "shadow-red-100",
+    glow: "group-hover:shadow-red-500/20",
+    border: "hover:border-red-400/30",
+    iconHover: "group-hover:bg-red-500",
+  },
+  teal: {
+    bg: "bg-teal-100",
+    text: "text-teal-600",
+    shadow: "shadow-teal-100",
+    glow: "group-hover:shadow-teal-500/20",
+    border: "hover:border-teal-400/30",
+    iconHover: "group-hover:bg-teal-500",
+  },
 };
 
 const WhyChooseUs = () => {
   return (
-    <section className="py-16 sm:py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-14">
-          <span className="inline-block px-4 py-1.5 bg-white/10 text-blue-300 text-xs font-semibold rounded-full uppercase tracking-wide mb-4">
+    <section className="relative py-16 sm:py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
+      {/* Ambient glow orbs */}
+      <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-500/5 rounded-full blur-[120px] animate-float" />
+      <div
+        className="absolute bottom-0 right-1/4 w-60 h-60 bg-indigo-500/5 rounded-full blur-[100px] animate-float"
+        style={{ animationDelay: "2s" }}
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ── Section Header ── */}
+        <div className="text-center mb-14 animate-fade-up">
+          <span className="inline-block px-4 py-1.5 bg-white/10 text-blue-300 text-xs font-semibold rounded-full uppercase tracking-wide mb-4 hover:scale-105 hover:bg-white/15 transition-all duration-300 cursor-default">
             Why DriveFleet
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-3">
@@ -172,26 +209,33 @@ const WhyChooseUs = () => {
           </p>
         </div>
 
-        {/* Features Grid */}
+        {/* ── Features Grid ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature) => {
+          {features.map((feature, index) => {
             const colors = colorMap[feature.color];
             return (
               <div
                 key={feature.title}
-                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 group"
+                className={`animate-fade-up bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 group hover:bg-white/10 ${colors.border} hover:-translate-y-2 hover:shadow-xl ${colors.glow} transition-all duration-300 cursor-default`}
+                style={{ animationDelay: `${index * 100 + 200}ms` }}
               >
+                {/* Icon */}
                 <div
-                  className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${colors.bg} ${colors.text} mb-4 shadow-lg ${colors.shadow} group-hover:scale-110 transition-transform duration-300`}
+                  className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${colors.bg} ${colors.text} mb-4 shadow-lg ${colors.shadow} group-hover:scale-110 group-hover:rotate-3 ${colors.iconHover} group-hover:text-white transition-all duration-300`}
                 >
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">
+
+                {/* Text */}
+                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-100 transition-colors duration-300">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-gray-400 leading-relaxed">
+                <p className="text-sm text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
                   {feature.description}
                 </p>
+
+                {/* Bottom accent line */}
+                <div className="mt-4 h-0.5 w-0 group-hover:w-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-500" />
               </div>
             );
           })}

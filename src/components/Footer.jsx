@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Mail, Phone, MapPin, ChevronRight } from "lucide-react";
 
 // ─── Social Icons ───────────────────────────────────────
@@ -80,11 +81,11 @@ const LinkItem = ({ href, children }) => (
   <li>
     <a
       href={href}
-      className="group flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors duration-200"
+      className="group/link flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-all duration-200 pl-0 hover:pl-1"
     >
       <ChevronRight
         size={14}
-        className="text-gray-600 group-hover:text-blue-400 transition-colors duration-200"
+        className="text-gray-600 group-hover/link:text-blue-400 group-hover/link:translate-x-0.5 transition-all duration-200"
       />
       {children}
     </a>
@@ -93,8 +94,9 @@ const LinkItem = ({ href, children }) => (
 
 // ─── Section Heading ────────────────────────────────────
 const SectionTitle = ({ children }) => (
-  <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
+  <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-5 relative inline-block">
     {children}
+    <span className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-blue-500 rounded-full" />
   </h3>
 );
 
@@ -103,7 +105,10 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-950 text-gray-300">
+    <footer className="bg-gray-950 text-gray-300 overflow-hidden">
+      {/* Ambient glow */}
+      <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-blue-500/3 rounded-full blur-[150px] pointer-events-none" />
+
       {/* Wave Top */}
       <div className="w-full overflow-hidden leading-[0]">
         <svg
@@ -124,8 +129,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <a href="/" className="inline-flex items-center gap-2.5 mb-5">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <Link
+              href="/"
+              className="group/logo inline-flex items-center gap-2.5 mb-5"
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover/logo:shadow-blue-500/40 group-hover/logo:scale-110 group-hover/logo:rotate-3 transition-all duration-300">
                 <svg
                   className="w-5 h-5 text-white"
                   viewBox="0 0 24 24"
@@ -140,11 +148,11 @@ const Footer = () => {
                   <circle cx="17" cy="17" r="2" />
                 </svg>
               </div>
-              <span className="text-xl font-extrabold tracking-tight">
+              <span className="text-xl font-extrabold tracking-tight group-hover/logo:tracking-wide transition-all duration-300">
                 <span className="text-white">Drive</span>
                 <span className="text-blue-400">Fleet</span>
               </span>
-            </a>
+            </Link>
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">
               Discover the perfect ride for every journey. DriveFleet connects
               you with premium vehicles at unbeatable prices.
@@ -159,7 +167,7 @@ const Footer = () => {
                   aria-label={label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 text-gray-400 ${hover} hover:text-white hover:border-transparent transition-all duration-300`}
+                  className={`w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 text-gray-400 ${hover} hover:text-white hover:border-transparent hover:scale-110 hover:-translate-y-1 hover:shadow-lg active:scale-95 transition-all duration-300`}
                 >
                   <Icon size={16} />
                 </a>
@@ -195,39 +203,39 @@ const Footer = () => {
           <div>
             <SectionTitle>Contact Us</SectionTitle>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <div className="w-9 h-9 shrink-0 flex items-center justify-center rounded-lg bg-white/5 border border-white/10">
+              <li className="group/contact flex items-start gap-3 p-2 -mx-2 rounded-lg hover:bg-white/5 transition-colors duration-200">
+                <div className="w-9 h-9 shrink-0 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 group-hover/contact:bg-blue-500/15 group-hover/contact:border-blue-400/30 transition-all duration-200">
                   <Mail size={16} className="text-blue-400" />
                 </div>
-                <div>
+                <div className="group-hover/contact:translate-x-0.5 transition-transform duration-200">
                   <p className="text-xs text-gray-500 mb-0.5">Email</p>
                   <a
                     href="mailto:hello@drivefleet.com"
-                    className="text-sm text-gray-300 hover:text-white transition-colors"
+                    className="text-sm text-gray-300 hover:text-white transition-colors duration-200"
                   >
                     hello@drivefleet.com
                   </a>
                 </div>
               </li>
-              <li className="flex items-start gap-3">
-                <div className="w-9 h-9 shrink-0 flex items-center justify-center rounded-lg bg-white/5 border border-white/10">
+              <li className="group/contact flex items-start gap-3 p-2 -mx-2 rounded-lg hover:bg-white/5 transition-colors duration-200">
+                <div className="w-9 h-9 shrink-0 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 group-hover/contact:bg-blue-500/15 group-hover/contact:border-blue-400/30 transition-all duration-200">
                   <Phone size={16} className="text-blue-400" />
                 </div>
-                <div>
+                <div className="group-hover/contact:translate-x-0.5 transition-transform duration-200">
                   <p className="text-xs text-gray-500 mb-0.5">Phone</p>
                   <a
                     href="tel:+1234567890"
-                    className="text-sm text-gray-300 hover:text-white transition-colors"
+                    className="text-sm text-gray-300 hover:text-white transition-colors duration-200"
                   >
                     +1 (234) 567-890
                   </a>
                 </div>
               </li>
-              <li className="flex items-start gap-3">
-                <div className="w-9 h-9 shrink-0 flex items-center justify-center rounded-lg bg-white/5 border border-white/10">
+              <li className="group/contact flex items-start gap-3 p-2 -mx-2 rounded-lg hover:bg-white/5 transition-colors duration-200">
+                <div className="w-9 h-9 shrink-0 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 group-hover/contact:bg-blue-500/15 group-hover/contact:border-blue-400/30 transition-all duration-200">
                   <MapPin size={16} className="text-blue-400" />
                 </div>
-                <div>
+                <div className="group-hover/contact:translate-x-0.5 transition-transform duration-200">
                   <p className="text-xs text-gray-500 mb-0.5">Address</p>
                   <p className="text-sm text-gray-300 leading-relaxed">
                     123 Fleet Avenue, Suite 400, San Francisco, CA 94102
@@ -246,10 +254,16 @@ const Footer = () => {
             &copy; {year} DriveFleet. All rights reserved.
           </p>
           <div className="flex items-center gap-5 text-xs text-gray-500">
-            <a href="#" className="hover:text-gray-300 transition-colors">
+            <a
+              href="#"
+              className="hover:text-white hover:-translate-y-0.5 transition-all duration-200"
+            >
               Privacy Policy
             </a>
-            <a href="#" className="hover:text-gray-300 transition-colors">
+            <a
+              href="#"
+              className="hover:text-white hover:-translate-y-0.5 transition-all duration-200"
+            >
               Terms of Service
             </a>
           </div>

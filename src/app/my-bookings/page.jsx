@@ -10,7 +10,10 @@ const MyBookingsPage = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch logged-in user
+  useEffect(() => {
+    document.title = "My Bookings | DriveFleet";
+  }, []);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -29,7 +32,6 @@ const MyBookingsPage = () => {
 
     const fetchBookings = async () => {
       try {
-        // ✅ Get JWT token from Better Auth client
         const { data: tokenData } = await authClient.token();
         const token = tokenData?.token;
 
@@ -67,8 +69,8 @@ const MyBookingsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        {/* ── Page Header ── */}
+        <div className="animate-fade-up flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               My Bookings
@@ -80,30 +82,33 @@ const MyBookingsPage = () => {
           </div>
           <Link
             href="/explore-cars"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors w-fit"
+            className="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold shadow-md shadow-blue-200 hover:shadow-lg hover:shadow-blue-300 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-fit overflow-hidden"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            Browse Cars
+            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
+            <span className="relative z-10 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Browse Cars
+            </span>
           </Link>
         </div>
 
-        {/* Empty State */}
+        {/* ── Empty State ── */}
         {bookings.length === 0 && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
-            <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4">
+          <div className="animate-scale-in bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+            <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-10 h-10 text-gray-400"
@@ -128,29 +133,30 @@ const MyBookingsPage = () => {
             </p>
             <Link
               href="/explore-cars"
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold shadow-md shadow-blue-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
             >
               Explore Cars
             </Link>
           </div>
         )}
 
-        {/* Bookings List */}
+        {/* ── Bookings List ── */}
         <div className="space-y-4">
           {bookings.map((booking, index) => (
             <div
               key={booking._id || index}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+              className="animate-fade-up group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-blue-100/40 hover:-translate-y-1 hover:border-blue-100 transition-all duration-300"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="flex flex-col sm:flex-row">
                 {/* Car Image */}
-                <div className="sm:w-48 h-40 sm:h-auto bg-gradient-to-br from-blue-100 to-indigo-100 relative flex-shrink-0">
+                <div className="sm:w-48 h-40 sm:h-auto bg-gradient-to-br from-blue-100 to-indigo-100 relative flex-shrink-0 overflow-hidden">
                   {booking.carImage ? (
                     <Image
                       src={booking.carImage}
                       alt={booking.carName}
                       fill
-                      className="object-cover"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                       sizes="(max-width: 640px) 100vw, 192px"
                     />
                   ) : (
@@ -179,7 +185,7 @@ const MyBookingsPage = () => {
                     {/* Top: Car Name + Status */}
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
-                        <h3 className="text-lg font-bold text-gray-900">
+                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-700 transition-colors duration-200">
                           {booking.carName}
                         </h3>
                         <p className="text-sm text-gray-500 mt-0.5">
@@ -189,31 +195,31 @@ const MyBookingsPage = () => {
                           </span>
                         </p>
                       </div>
-                      <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-xs font-semibold rounded-lg border border-emerald-100 flex-shrink-0">
+                      <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-xs font-semibold rounded-lg border border-emerald-100 flex-shrink-0 group-hover:bg-emerald-100 group-hover:scale-105 transition-all duration-200">
                         Confirmed
                       </span>
                     </div>
 
                     {/* Info Grid */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
-                      <div className="bg-gray-50 rounded-xl p-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+                      <div className="bg-gray-50 rounded-xl p-3 group-hover:bg-blue-50 transition-colors duration-200">
                         <p className="text-xs text-gray-500 mb-0.5">
                           Total Price
                         </p>
-                        <p className="text-sm font-bold text-gray-900">
+                        <p className="text-sm font-bold text-gray-900 group-hover:text-blue-700 transition-colors duration-200">
                           ${booking.dailyRentPrice}
                           <span className="text-xs font-normal text-gray-400">
                             /day
                           </span>
                         </p>
                       </div>
-                      <div className="bg-gray-50 rounded-xl p-3">
+                      <div className="bg-gray-50 rounded-xl p-3 group-hover:bg-blue-50 transition-colors duration-200">
                         <p className="text-xs text-gray-500 mb-0.5">
                           Booking Date
                         </p>
                         <Link
                           href={`/explore-cars/${booking.carId}`}
-                          className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+                          className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors duration-200"
                         >
                           {booking.bookingDate
                             ? new Date(booking.bookingDate).toLocaleDateString(
@@ -227,17 +233,21 @@ const MyBookingsPage = () => {
                             : "N/A"}
                         </Link>
                       </div>
-                      <div className="bg-gray-50 rounded-xl p-3">
+                      <div className="bg-gray-50 rounded-xl p-3 group-hover:bg-blue-50 transition-colors duration-200">
                         <p className="text-xs text-gray-500 mb-0.5">Driver</p>
                         <p className="text-sm font-semibold text-gray-900">
-                          {booking.driverNeeded ? "Requested" : "Not Needed"}
+                          {booking.driverNeeded ? (
+                            <span className="text-amber-600">Requested</span>
+                          ) : (
+                            <span className="text-gray-500">Not Needed</span>
+                          )}
                         </p>
                       </div>
                     </div>
 
                     {/* Special Note */}
                     {booking.specialNote && (
-                      <div className="bg-amber-50 border border-amber-100 rounded-xl p-3">
+                      <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 hover:bg-amber-100/80 transition-colors duration-200">
                         <p className="text-xs text-amber-600 font-medium mb-0.5">
                           Special Note
                         </p>
@@ -249,12 +259,15 @@ const MyBookingsPage = () => {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100 group-hover:border-blue-50 transition-colors duration-300">
                     <Link
                       href={`/explore-cars/${booking.carId}`}
-                      className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                      className="group/link text-sm font-medium text-blue-600 hover:text-blue-700 hover:translate-x-1 transition-all duration-200"
                     >
-                      View Car Details →
+                      View Car Details
+                      <span className="inline-block ml-1 group-hover/link:translate-x-1 transition-transform duration-200">
+                        →
+                      </span>
                     </Link>
                   </div>
                 </div>

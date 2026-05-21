@@ -36,6 +36,10 @@ const ExploreCarsPage = () => {
       .catch(() => setLoading(false));
   }, [search, typeFilter]);
 
+  useEffect(() => {
+    document.title = "Explore Cars | DriveFleet";
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -115,8 +119,8 @@ const ExploreCarsPage = () => {
           </div>
         ) : cars.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {cars.map((car) => (
-              <CarsCard key={car._id} car={car} />
+            {cars.map((car, index) => (
+              <CarsCard key={car._id} car={car} index={index} />
             ))}
           </div>
         ) : (
