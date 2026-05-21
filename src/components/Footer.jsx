@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Mail, Phone, MapPin, ChevronRight } from "lucide-react";
 
-// ─── Social Icons ───────────────────────────────────────
 const XIcon = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -34,7 +33,6 @@ const YoutubeIcon = ({ size = 16 }) => (
   </svg>
 );
 
-// ─── Data ───────────────────────────────────────────────
 const socials = [
   { Icon: XIcon, href: "#", label: "X", hover: "hover:bg-gray-800" },
   {
@@ -76,7 +74,6 @@ const vehicleTypes = [
   "Convertible",
 ];
 
-// ─── Reusable Link Item ─────────────────────────────────
 const LinkItem = ({ href, children }) => (
   <li>
     <a
@@ -92,7 +89,6 @@ const LinkItem = ({ href, children }) => (
   </li>
 );
 
-// ─── Section Heading ────────────────────────────────────
 const SectionTitle = ({ children }) => (
   <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-5 relative inline-block">
     {children}
@@ -100,16 +96,13 @@ const SectionTitle = ({ children }) => (
   </h3>
 );
 
-// ─── Footer ─────────────────────────────────────────────
 const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
     <footer className="bg-gray-950 text-gray-300 overflow-hidden">
-      {/* Ambient glow */}
       <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-blue-500/3 rounded-full blur-[150px] pointer-events-none" />
 
-      {/* Wave Top */}
       <div className="w-full overflow-hidden leading-[0]">
         <svg
           className="relative block w-full h-12 sm:h-16"
@@ -124,10 +117,9 @@ const Footer = () => {
         </svg>
       </div>
 
-      {/* Main Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
-          {/* Brand */}
+
           <div className="sm:col-span-2 lg:col-span-1">
             <Link
               href="/"
@@ -158,7 +150,6 @@ const Footer = () => {
               you with premium vehicles at unbeatable prices.
             </p>
 
-            {/* Socials */}
             <div className="flex items-center gap-2.5">
               {socials.map(({ Icon, href, label, hover }) => (
                 <a
@@ -175,7 +166,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
             <SectionTitle>Quick Links</SectionTitle>
             <ul className="space-y-3">
@@ -187,7 +177,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Vehicle Types */}
           <div>
             <SectionTitle>Vehicle Types</SectionTitle>
             <ul className="space-y-3">
@@ -198,8 +187,6 @@ const Footer = () => {
               ))}
             </ul>
           </div>
-
-          {/* Contact */}
           <div>
             <SectionTitle>Contact Us</SectionTitle>
             <ul className="space-y-4">
@@ -247,7 +234,6 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div className="border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-gray-500">

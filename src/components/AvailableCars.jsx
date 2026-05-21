@@ -25,7 +25,7 @@ const AvailableCars = () => {
   return (
     <section className="py-16 sm:py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ── Section Header ── */}
+
         <div className="text-center mb-12 animate-fade-up">
           <span className="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full uppercase tracking-wide mb-4 hover:scale-105 hover:bg-blue-200 transition-all duration-300 cursor-default">
             Available Now
@@ -39,7 +39,6 @@ const AvailableCars = () => {
           </p>
         </div>
 
-        {/* ── Loading ── */}
         {loading ? (
           <div className="flex items-center justify-center py-16 animate-fade-up">
             <Spinner size="lg" label="Loading cars..." />
@@ -52,7 +51,7 @@ const AvailableCars = () => {
                 className="animate-fade-up bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-xl hover:shadow-blue-100/50 hover:-translate-y-2 hover:border-blue-100 transition-all duration-300"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Image */}
+
                 <div className="relative h-48 bg-gray-200 overflow-hidden">
                   <Image
                     src={car.image}
@@ -61,7 +60,7 @@ const AvailableCars = () => {
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
-                  {/* Gradient overlay on hover */}
+
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                   <span className="absolute top-3 left-3 px-2.5 py-1 bg-emerald-500 text-white text-xs font-semibold rounded-lg shadow-sm shadow-emerald-200">
@@ -72,7 +71,6 @@ const AvailableCars = () => {
                   </span>
                 </div>
 
-                {/* Info */}
                 <div className="p-5">
                   <h3 className="text-lg font-bold text-gray-900 mb-1 truncate group-hover:text-blue-700 transition-colors duration-200">
                     {car.carName}
@@ -81,7 +79,6 @@ const AvailableCars = () => {
                     {car.pickupLocation}
                   </p>
 
-                  {/* Specs Row */}
                   <div className="flex items-center gap-4 text-xs text-gray-500 mb-4">
                     <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-50 group-hover:bg-blue-50 transition-colors duration-200">
                       <svg
@@ -128,7 +125,6 @@ const AvailableCars = () => {
                     </div>
                   </div>
 
-                  {/* Price + Button */}
                   <div className="flex items-center justify-between">
                     <p className="text-xl font-bold text-blue-600 group-hover:scale-105 transition-transform duration-200">
                       ${car.dailyRentPrice}
@@ -155,7 +151,6 @@ const AvailableCars = () => {
           </div>
         )}
 
-        {/* ── View All Button ── */}
         {cars.length > 0 && (
           <div
             className="text-center mt-10 animate-fade-up"
@@ -165,7 +160,6 @@ const AvailableCars = () => {
               href="/explore-cars"
               className="group/btn relative inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-blue-300 hover:scale-[1.03] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 overflow-hidden"
             >
-              {/* Shine sweep */}
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
               <span className="relative z-10 flex items-center gap-2">
                 View All Cars

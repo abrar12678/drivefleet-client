@@ -9,14 +9,14 @@ const CarsCard = ({ car, index = 0 }) => {
       className="animate-fade-up group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:shadow-blue-100/50 hover:-translate-y-2 hover:border-blue-100 transition-all duration-300"
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      {/* Image */}
+
       <div className="relative h-52 overflow-hidden bg-gray-100">
         <img
           src={car.image}
           alt={car.carName}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
-        {/* Gradient overlay on hover */}
+
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         <span className="absolute top-3 left-3 px-3 py-1 text-xs font-semibold rounded-lg bg-white/90 backdrop-blur-sm text-gray-700 border border-gray-200/50 group-hover:bg-white group-hover:shadow-sm transition-all duration-300">
@@ -33,7 +33,6 @@ const CarsCard = ({ car, index = 0 }) => {
         )}
       </div>
 
-      {/* Content */}
       <div className="p-5">
         <h3 className="text-lg font-bold text-gray-900 mb-1 truncate group-hover:text-blue-700 transition-colors duration-200">
           {car.carName}

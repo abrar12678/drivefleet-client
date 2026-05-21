@@ -187,7 +187,7 @@ const colorMap = {
 const WhyChooseUs = () => {
   return (
     <section className="relative py-16 sm:py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
-      {/* Ambient glow orbs */}
+
       <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-500/5 rounded-full blur-[120px] animate-float" />
       <div
         className="absolute bottom-0 right-1/4 w-60 h-60 bg-indigo-500/5 rounded-full blur-[100px] animate-float"
@@ -195,7 +195,7 @@ const WhyChooseUs = () => {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ── Section Header ── */}
+
         <div className="text-center mb-14 animate-fade-up">
           <span className="inline-block px-4 py-1.5 bg-white/10 text-blue-300 text-xs font-semibold rounded-full uppercase tracking-wide mb-4 hover:scale-105 hover:bg-white/15 transition-all duration-300 cursor-default">
             Why DriveFleet
@@ -209,7 +209,6 @@ const WhyChooseUs = () => {
           </p>
         </div>
 
-        {/* ── Features Grid ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => {
             const colors = colorMap[feature.color];
@@ -219,14 +218,13 @@ const WhyChooseUs = () => {
                 className={`animate-fade-up bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 group hover:bg-white/10 ${colors.border} hover:-translate-y-2 hover:shadow-xl ${colors.glow} transition-all duration-300 cursor-default`}
                 style={{ animationDelay: `${index * 100 + 200}ms` }}
               >
-                {/* Icon */}
+
                 <div
                   className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${colors.bg} ${colors.text} mb-4 shadow-lg ${colors.shadow} group-hover:scale-110 group-hover:rotate-3 ${colors.iconHover} group-hover:text-white transition-all duration-300`}
                 >
                   {feature.icon}
                 </div>
 
-                {/* Text */}
                 <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-100 transition-colors duration-300">
                   {feature.title}
                 </h3>
@@ -234,7 +232,6 @@ const WhyChooseUs = () => {
                   {feature.description}
                 </p>
 
-                {/* Bottom accent line */}
                 <div className="mt-4 h-0.5 w-0 group-hover:w-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-500" />
               </div>
             );

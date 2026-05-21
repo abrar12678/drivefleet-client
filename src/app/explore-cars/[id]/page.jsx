@@ -10,7 +10,6 @@ const CarDetailsPage = async ({ params }) => {
     headers: await headers(),
   });
 
-  // Fetch car — server-side
   let car = null;
   try {
     const res = await fetch(`http://localhost:5000/explore-cars/${id}`, {
@@ -24,7 +23,6 @@ const CarDetailsPage = async ({ params }) => {
     console.error("Fetch error:", err);
   }
 
-  // Get user session — server-side
   let user = null;
   try {
     const session = await auth.api.getSession({
@@ -89,12 +87,9 @@ const CarDetailsPage = async ({ params }) => {
         </nav>
       </div>
 
-      {/* Main */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-10">
-          {/* Left — Image & Info */}
           <div className="lg:col-span-3 space-y-6">
-            {/* Image */}
             <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-gray-200 shadow-md">
               <Image
                 src={car.image}
@@ -113,7 +108,6 @@ const CarDetailsPage = async ({ params }) => {
               </span>
             </div>
 
-            {/* Title */}
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 {car.carName}
@@ -121,7 +115,6 @@ const CarDetailsPage = async ({ params }) => {
               <p className="text-gray-500 mt-1">{car.pickupLocation}</p>
             </div>
 
-            {/* Description */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <h2 className="text-lg font-semibold text-gray-900 mb-3">
                 Description
@@ -131,7 +124,6 @@ const CarDetailsPage = async ({ params }) => {
               </p>
             </div>
 
-            {/* Specifications */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 Specifications
@@ -156,7 +148,6 @@ const CarDetailsPage = async ({ params }) => {
             </div>
           </div>
 
-          {/* Right — Booking Card */}
           <div className="lg:col-span-2">
             <BookingCard car={car} user={user} />
           </div>

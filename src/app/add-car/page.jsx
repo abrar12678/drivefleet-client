@@ -52,7 +52,7 @@ const AddCarPage = () => {
     setSuccess("");
 
     try {
-      // ✅ Get JWT token
+
       const { data: tokenData } = await authClient.token();
       console.log("Token:", tokenData);
       const token = tokenData?.token;
@@ -121,20 +121,18 @@ const AddCarPage = () => {
           </p>
         </div>
 
-        {/* Success Message */}
         {success && (
           <div className="mb-6 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl text-sm text-emerald-700 font-medium">
             {success}
           </div>
         )}
 
-        {/* Form */}
         <form
           onSubmit={handleSubmit}
           className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 space-y-6"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Car Name */}
+
             <div>
               <label className={labelClass}>Car Name *</label>
               <input
@@ -148,7 +146,6 @@ const AddCarPage = () => {
               />
             </div>
 
-            {/* Car Type */}
             <div>
               <label className={labelClass}>Car Type *</label>
               <select
@@ -169,7 +166,6 @@ const AddCarPage = () => {
               </select>
             </div>
 
-            {/* Daily Rent Price */}
             <div>
               <label className={labelClass}>Daily Rent Price ($) *</label>
               <input
@@ -184,7 +180,6 @@ const AddCarPage = () => {
               />
             </div>
 
-            {/* Seat Capacity */}
             <div>
               <label className={labelClass}>Seat Capacity *</label>
               <input
@@ -199,7 +194,6 @@ const AddCarPage = () => {
               />
             </div>
 
-            {/* Pickup Location */}
             <div className="md:col-span-2">
               <label className={labelClass}>Pickup Location *</label>
               <input
@@ -213,7 +207,6 @@ const AddCarPage = () => {
               />
             </div>
 
-            {/* Image URL */}
             <div className="md:col-span-2">
               <label className={labelClass}>Image URL *</label>
               <input
@@ -237,7 +230,6 @@ const AddCarPage = () => {
               )}
             </div>
 
-            {/* Description */}
             <div className="md:col-span-2">
               <label className={labelClass}>Description *</label>
               <textarea
@@ -251,7 +243,6 @@ const AddCarPage = () => {
               />
             </div>
 
-            {/* Availability */}
             <div className="md:col-span-2">
               <label className={labelClass}>Availability Status *</label>
               <div className="flex gap-4">
@@ -281,7 +272,6 @@ const AddCarPage = () => {
             </div>
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}

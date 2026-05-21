@@ -105,7 +105,6 @@ const MyBookingsPage = () => {
           </Link>
         </div>
 
-        {/* ── Empty State ── */}
         {bookings.length === 0 && (
           <div className="animate-scale-in bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
             <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -140,7 +139,6 @@ const MyBookingsPage = () => {
           </div>
         )}
 
-        {/* ── Bookings List ── */}
         <div className="space-y-4">
           {bookings.map((booking, index) => (
             <div
@@ -149,7 +147,6 @@ const MyBookingsPage = () => {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="flex flex-col sm:flex-row">
-                {/* Car Image */}
                 <div className="sm:w-48 h-40 sm:h-auto bg-gradient-to-br from-blue-100 to-indigo-100 relative flex-shrink-0 overflow-hidden">
                   {booking.carImage ? (
                     <Image
@@ -179,10 +176,8 @@ const MyBookingsPage = () => {
                   )}
                 </div>
 
-                {/* Booking Details */}
                 <div className="flex-1 p-5 sm:p-6 flex flex-col justify-between">
                   <div>
-                    {/* Top: Car Name + Status */}
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
                         <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-700 transition-colors duration-200">
@@ -200,7 +195,6 @@ const MyBookingsPage = () => {
                       </span>
                     </div>
 
-                    {/* Info Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
                       <div className="bg-gray-50 rounded-xl p-3 group-hover:bg-blue-50 transition-colors duration-200">
                         <p className="text-xs text-gray-500 mb-0.5">
@@ -245,7 +239,6 @@ const MyBookingsPage = () => {
                       </div>
                     </div>
 
-                    {/* Special Note */}
                     {booking.specialNote && (
                       <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 hover:bg-amber-100/80 transition-colors duration-200">
                         <p className="text-xs text-amber-600 font-medium mb-0.5">
@@ -258,7 +251,6 @@ const MyBookingsPage = () => {
                     )}
                   </div>
 
-                  {/* Actions */}
                   <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100 group-hover:border-blue-50 transition-colors duration-300">
                     <Link
                       href={`/explore-cars/${booking.carId}`}

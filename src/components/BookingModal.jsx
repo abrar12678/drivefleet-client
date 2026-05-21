@@ -104,7 +104,6 @@ const BookingModal = ({ car, user, isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Body */}
         <div className="px-6 py-5 space-y-5">
           {/* Car Summary */}
           <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
@@ -134,7 +133,6 @@ const BookingModal = ({ car, user, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Booking Info */}
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
               <p className="text-xs text-gray-500 mb-0.5">Booking By</p>
@@ -156,7 +154,6 @@ const BookingModal = ({ car, user, isOpen, onClose }) => {
 
           <div className="h-px bg-gray-200" />
 
-          {/* Driver Needed */}
           <div>
             <p className="text-sm font-semibold text-gray-900">Driver Needed</p>
             <p className="text-xs text-gray-500 mt-1 mb-3">
@@ -220,7 +217,6 @@ const BookingModal = ({ car, user, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Special Note */}
           <div>
             <p className="text-sm font-semibold text-gray-900 mb-2">
               Special Note
@@ -235,7 +231,6 @@ const BookingModal = ({ car, user, isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="px-6 pb-6 flex items-center gap-3">
           <button
             onClick={onClose}

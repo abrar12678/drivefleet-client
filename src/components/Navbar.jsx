@@ -199,15 +199,12 @@ const Navbar = () => {
         mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
       }`}
     >
-      {/* Navbar entrance animation class */}
       {mounted && (
         <style>{`.animate-nav{animation:slideDown .5s ease-out forwards}`}</style>
       )}
 
-      {/* Desktop & Tablet Landscape */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[72px]">
-          {/* Logo */}
           <Link
             href="/"
             className="group flex items-center gap-2.5 select-none"
@@ -237,7 +234,6 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* Center Nav Links */}
           <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
@@ -261,7 +257,6 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Right Side */}
           <div className="hidden lg:flex items-center gap-3">
             {sessionLoading ? (
               <div className="w-9 h-9 border-2 border-gray-200 border-t-blue-600 rounded-full animate-spin" />
@@ -297,7 +292,6 @@ const Navbar = () => {
                   </svg>
                 </button>
 
-                {/* Dropdown */}
                 <div
                   className={`absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 origin-top-right ${
                     dropdownOpen
@@ -372,7 +366,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Hamburger */}
           <button
             onClick={toggleMenu}
             className="lg:hidden relative w-10 h-10 flex items-center justify-center rounded-xl text-gray-600 hover:bg-blue-50 hover:text-blue-600 hover:scale-110 active:scale-95 transition-all duration-200"
@@ -398,7 +391,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile & Tablet Menu Overlay */}
       <div
         className={`lg:hidden fixed inset-0 z-40 transition-all duration-300 ${
           mobileMenuOpen
@@ -416,7 +408,6 @@ const Navbar = () => {
             mobileMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          {/* Drawer Header */}
           <div className="flex items-center justify-between px-5 h-[72px] border-b border-gray-100">
             <Link
               href="/"
@@ -464,7 +455,6 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* User Profile (logged in) */}
           {user && (
             <div className="px-5 py-4 border-b border-gray-100">
               <div className="flex items-center gap-3">
@@ -486,7 +476,6 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* Drawer Nav Links — Staggered Animation */}
           <div className="px-3 py-4 space-y-1">
             {navLinks.map((link, index) => (
               <Link
@@ -544,7 +533,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Drawer Auth */}
           <div className="mx-5 border-t border-gray-100" />
           <div
             className={`px-5 py-5 ${mobileMenuOpen ? "animate-fade-slide-right" : ""}`}

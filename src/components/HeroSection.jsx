@@ -12,7 +12,6 @@ const stats = [
 const HeroSection = () => {
   return (
     <section className="relative min-h-[92vh] flex items-center overflow-hidden bg-gray-950">
-      {/* ── Background Layers ── */}
       <div className="absolute inset-0">
         <img
           src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80"
@@ -22,7 +21,6 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-950/80 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-gray-950/50" />
 
-        {/* Animated floating orbs */}
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] animate-float" />
         <div
           className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-indigo-500/10 rounded-full blur-[80px] animate-float"
@@ -30,10 +28,8 @@ const HeroSection = () => {
         />
       </div>
 
-      {/* ── Content ── */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="max-w-2xl">
-          {/* Badge */}
           <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-blue-300 text-xs font-medium uppercase tracking-widest mb-6 animate-fade-up hover:bg-white/15 hover:border-white/20 hover:scale-105 transition-all duration-300 cursor-default"
             style={{ animationDelay: "0.2s" }}
@@ -42,7 +38,6 @@ const HeroSection = () => {
             Drive Your Dream Car Today
           </div>
 
-          {/* Title */}
           <h1
             className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-[1.1] mb-6 animate-fade-up"
             style={{ animationDelay: "0.4s" }}
@@ -56,7 +51,6 @@ const HeroSection = () => {
             In Minutes
           </h1>
 
-          {/* Description */}
           <p
             className="text-base sm:text-lg text-gray-300 leading-relaxed mb-8 max-w-lg animate-fade-up"
             style={{ animationDelay: "0.6s" }}
@@ -66,7 +60,6 @@ const HeroSection = () => {
             car waiting for you.
           </p>
 
-          {/* CTA Buttons */}
           <div
             className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-14 animate-fade-up"
             style={{ animationDelay: "0.8s" }}
@@ -75,7 +68,7 @@ const HeroSection = () => {
               href="/explore-cars"
               className="group relative inline-flex items-center gap-2.5 px-7 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/40 hover:scale-[1.04] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 overflow-hidden"
             >
-              {/* Shine sweep on hover */}
+
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               <span className="relative z-10 flex items-center gap-2.5">
                 Explore Cars
@@ -94,7 +87,6 @@ const HeroSection = () => {
             </Link>
           </div>
 
-          {/* Stats */}
           <div
             className="flex flex-wrap items-center gap-6 sm:gap-10 animate-fade-up"
             style={{ animationDelay: "1s" }}

@@ -93,7 +93,6 @@ const HowItWorks = () => {
   return (
     <section className="py-16 sm:py-20 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ── Section Header ── */}
         <div className="text-center mb-14 animate-fade-up">
           <span className="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full uppercase tracking-wide mb-4 hover:scale-105 hover:bg-indigo-200 transition-all duration-300 cursor-default">
             Simple Process
@@ -107,7 +106,6 @@ const HowItWorks = () => {
           </p>
         </div>
 
-        {/* ── Steps Grid ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((item, index) => (
             <div
@@ -115,7 +113,6 @@ const HowItWorks = () => {
               className="relative text-center group animate-fade-up"
               style={{ animationDelay: `${index * 150 + 200}ms` }}
             >
-              {/* Connector Line (desktop only, not after last) */}
               {index < steps.length - 1 && (
                 <div
                   className="hidden lg:block absolute top-10 left-[60%] h-0.5 bg-gradient-to-r from-blue-300 to-indigo-200 animate-line-grow"
@@ -123,7 +120,6 @@ const HowItWorks = () => {
                 />
               )}
 
-              {/* Step Circle */}
               <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white mb-5 shadow-lg shadow-blue-200 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-blue-300/50 group-hover:-translate-y-2 transition-all duration-300">
                 <span className="transition-transform duration-300 group-hover:scale-110">
                   {item.icon}
@@ -135,7 +131,6 @@ const HowItWorks = () => {
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-30 blur-xl scale-150 transition-opacity duration-500 -z-10" />
               </div>
 
-              {/* Text */}
               <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors duration-300">
                 {item.title}
               </h3>

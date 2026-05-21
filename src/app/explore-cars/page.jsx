@@ -20,7 +20,6 @@ const ExploreCarsPage = () => {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("All");
 
-  // ✅ Fetch cars from backend with search & filter query params
   useEffect(() => {
     setLoading(true);
     const params = new URLSearchParams();
@@ -42,7 +41,7 @@ const ExploreCarsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+
       <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
@@ -55,7 +54,6 @@ const ExploreCarsPage = () => {
         </div>
       </div>
 
-      {/* Search & Filter */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-7 relative z-10">
         <div className="bg-white rounded-2xl shadow-lg shadow-gray-200/50 border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <div className="relative flex-1">
@@ -86,7 +84,6 @@ const ExploreCarsPage = () => {
         </div>
       </div>
 
-      {/* Results */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-6">
         <p className="text-sm text-gray-500">
           Showing{" "}
@@ -111,7 +108,6 @@ const ExploreCarsPage = () => {
         </p>
       </div>
 
-      {/* Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {loading ? (
           <div className="flex items-center justify-center py-20">

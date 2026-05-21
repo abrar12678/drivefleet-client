@@ -164,7 +164,7 @@ const MyAddedCarsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* ── Page Header ── */}
+
         <div className="animate-fade-up flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
@@ -199,7 +199,6 @@ const MyAddedCarsPage = () => {
           </Link>
         </div>
 
-        {/* ── Empty State ── */}
         {cars.length === 0 && (
           <div className="animate-scale-in bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
             <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4">
@@ -233,7 +232,6 @@ const MyAddedCarsPage = () => {
           </div>
         )}
 
-        {/* ── Cars Grid ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {cars.map((car, index) => (
             <div
@@ -241,7 +239,7 @@ const MyAddedCarsPage = () => {
               className="animate-fade-up group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-blue-100/50 hover:-translate-y-2 hover:border-blue-100 transition-all duration-300"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              {/* Image */}
+
               <div className="relative h-48 bg-gray-200 overflow-hidden">
                 <Image
                   src={car.image}
@@ -265,7 +263,6 @@ const MyAddedCarsPage = () => {
                 </span>
               </div>
 
-              {/* Info */}
               <div className="p-5">
                 <h3 className="text-lg font-bold text-gray-900 mb-1 truncate group-hover:text-blue-700 transition-colors duration-200">
                   {car.carName}
@@ -289,7 +286,6 @@ const MyAddedCarsPage = () => {
                   {car.description}
                 </p>
 
-                {/* Action Buttons */}
                 <div className="flex gap-2">
                   <button
                     onClick={() => openUpdateModal(car)}
@@ -310,7 +306,6 @@ const MyAddedCarsPage = () => {
         </div>
       </div>
 
-      {/* ========== UPDATE MODAL ========== */}
       {isUpdateOpen && updateCar && (
         <div
           ref={updateModalRef}
@@ -326,7 +321,6 @@ const MyAddedCarsPage = () => {
             className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-[slideUp_0.25s_ease-out]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
             <div className="px-6 pt-6 pb-0">
               <div className="flex items-center justify-between">
                 <div>
@@ -454,7 +448,6 @@ const MyAddedCarsPage = () => {
               </div>
             </div>
 
-            {/* Footer */}
             <div className="px-6 pb-6 flex items-center gap-3">
               <button
                 onClick={() => {
@@ -484,7 +477,6 @@ const MyAddedCarsPage = () => {
         </div>
       )}
 
-      {/* ========== DELETE CONFIRMATION MODAL ========== */}
       {isDeleteOpen && deleteCar && (
         <div
           ref={deleteModalRef}
