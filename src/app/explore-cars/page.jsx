@@ -5,7 +5,6 @@ import CarsCard from "@/components/CarsCard";
 import { Search } from "lucide-react";
 
 const carTypes = [
-  "All",
   "Sedan",
   "SUV",
   "Luxury",
@@ -20,23 +19,21 @@ const ExploreCarsPage = () => {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("All");
 
+  // ✅ Fetch cars from backend with search & filter query params
   useEffect(() => {
-    fetch("http://localhost:5000/explore-cars")
+    setLoading(true);
+    const params = new URLSearchParams();
+    if (search) params.set("search", search);
+    if (typeFilter !== "All") params.set("type", typeFilter);
+
+    fetch(`http://localhost:5000/explore-cars?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => {
         setCars(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
-
-  const filteredCars = cars.filter((car) => {
-    const matchSearch = car.carName
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchType = typeFilter === "All" || car.carType === typeFilter;
-    return matchSearch && matchType;
-  });
+  }, [search, typeFilter]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -74,9 +71,10 @@ const ExploreCarsPage = () => {
             onChange={(e) => setTypeFilter(e.target.value)}
             className="w-full sm:w-48 px-4 py-3 text-sm rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none text-gray-700 font-medium transition-all duration-200 cursor-pointer"
           >
+            <option value="All">All Types</option>
             {carTypes.map((type) => (
               <option key={type} value={type}>
-                {type === "All" ? "All Types" : type}
+                {type}
               </option>
             ))}
           </select>
@@ -87,10 +85,8 @@ const ExploreCarsPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-6">
         <p className="text-sm text-gray-500">
           Showing{" "}
-          <span className="font-semibold text-gray-900">
-            {filteredCars.length}
-          </span>{" "}
-          car{filteredCars.length !== 1 ? "s" : ""}
+          <span className="font-semibold text-gray-900">{cars.length}</span> car
+          {cars.length !== 1 ? "s" : ""}
           {typeFilter !== "All" && (
             <span>
               {" "}
@@ -116,9 +112,9 @@ const ExploreCarsPage = () => {
           <div className="flex items-center justify-center py-20">
             <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
           </div>
-        ) : filteredCars.length > 0 ? (
+        ) : cars.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCars.map((car) => (
+            {cars.map((car) => (
               <CarsCard key={car._id} car={car} />
             ))}
           </div>
