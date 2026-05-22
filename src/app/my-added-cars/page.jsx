@@ -9,10 +9,10 @@ import { toast } from "react-toastify";
 
 const MyAddedCarsPage = () => {
   const router = useRouter();
-  const [user, setUser] = useState(null);
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user;
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [authChecking, setAuthChecking] = useState(true);
 
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [updateCar, setUpdateCar] = useState(null);
@@ -29,25 +29,12 @@ const MyAddedCarsPage = () => {
   }, []);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data } = await authClient.getSession();
-        const currentUser = data?.user || null;
-        setUser(currentUser);
-
-        if (!currentUser) {
-          router.push("/sign-in");
-          return;
-        }
-      } catch (err) {
-        router.push("/sign-in");
-        return;
-      } finally {
-        setAuthChecking(false);
-      }
-    };
-    fetchUser();
-  }, []);
+    if (isPending) return;
+    if (!session) {
+      router.push("/sign-in");
+      return;
+    }
+  }, [session, isPending]);
 
   useEffect(() => {
     if (!user) return;
@@ -168,7 +155,7 @@ const MyAddedCarsPage = () => {
     }
   };
 
-  if (loading || authChecking || !user) {
+  if (isPending || loading || !user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Spinner size="lg" label="Loading your cars..." />

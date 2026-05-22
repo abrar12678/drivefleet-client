@@ -1,283 +1,259 @@
 "use client";
+
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
-import { Spinner } from "@heroui/react";
+import { useAuth } from "@/lib/use-auth";
+import Image from "next/image";
+import Link from "next/link";
 
-const MyBookingsPage = () => {
+const SERVER = process.env.NEXT_PUBLIC_SERVER_URL;
+
+export default function MyBookingsPage() {
   const router = useRouter();
-  const [user, setUser] = useState(null);
+  const { user, loading: authLoading } = useAuth();
+
   const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    document.title = "My Bookings | DriveFleet";
-  }, []);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data } = await authClient.getSession();
-        const currentUser = data?.user || null;
-        setUser(currentUser);
-
-        if (!currentUser) {
-          router.push("/sign-in");
-          return;
-        }
-      } catch (err) {
-        router.push("/sign-in");
-        return;
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-
-    const fetchBookings = async () => {
-      try {
-        const { data: tokenData } = await authClient.token();
-        const token = tokenData?.token;
-
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/bookings?email=${user.email}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-        const data = await res.json();
-        if (Array.isArray(data)) {
-          setBookings(data);
-        } else {
-          setBookings([]);
-        }
-      } catch (err) {
-        console.error("Fetch bookings error:", err);
-      }
-    };
-    fetchBookings();
-  }, [user]);
-
-  if (loading || !user) {
+  // ===== AUTH GUARD =====
+  if (authLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Spinner size="lg" label="Loading your bookings..." />
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-500 text-sm">Checking authentication...</p>
+        </div>
       </div>
     );
   }
 
+  if (!user) {
+    return null;
+  }
+
+  // ===== FETCH BOOKINGS =====
+  useEffect(() => {
+    if (!user) return;
+
+    async function fetchBookings() {
+      setLoading(true);
+      setError("");
+      try {
+        const res = await fetch(
+          `${SERVER}/api/bookings/my-bookings?userId=${user.id}`,
+          {
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+        const data = await res.json();
+        if (res.ok) {
+          setBookings(data.bookings || data || []);
+        } else {
+          setError(data.message || "Failed to load bookings.");
+        }
+      } catch (err) {
+        console.error("Fetch bookings error:", err);
+        setError("Something went wrong. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchBookings();
+  }, [user]);
+
+  const handleCancel = async (bookingId) => {
+    if (!confirm("Are you sure you want to cancel this booking?")) return;
+    try {
+      const res = await fetch(`${SERVER}/api/bookings/${bookingId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setBookings((prev) => prev.filter((b) => b._id !== bookingId));
+      } else {
+        alert(data.message || "Failed to cancel booking.");
+      }
+    } catch (err) {
+      alert("Something went wrong.");
+    }
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "N/A";
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const totalDays = (start, end) => {
+    if (!start || !end) return 1;
+    const diff = new Date(end) - new Date(start);
+    return Math.max(1, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Page Header */}
-        <div className="animate-fade-up flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              My Bookings
-            </h1>
-            <p className="text-gray-500 text-sm mt-1">
-              {bookings.length} {bookings.length === 1 ? "booking" : "bookings"}{" "}
-              found
-            </p>
-          </div>
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-5xl mx-auto">
+        <div className="mb-8">
           <Link
-            href="/explore-cars"
-            className="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold shadow-md shadow-blue-200 hover:shadow-lg hover:shadow-blue-300 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-fit overflow-hidden"
+            href="/"
+            className="text-blue-600 hover:text-blue-800 text-sm mb-4 inline-block"
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
-            <span className="relative z-10 flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              Browse Cars
-            </span>
+            &larr; Back to Home
           </Link>
+          <h1 className="text-3xl font-bold text-gray-900">My Bookings</h1>
+          <p className="text-gray-500 mt-1">
+            View and manage your car rental bookings.
+          </p>
         </div>
 
-        {bookings.length === 0 && (
-          <div className="animate-scale-in bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
-            <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-10 h-10 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">
-              No Bookings Yet
+        {loading && (
+          <div className="flex items-center justify-center py-16">
+            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+
+        {error && !loading && (
+          <div className="bg-red-50 text-red-700 border border-red-200 rounded-lg p-4 mb-6">
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && bookings.length === 0 && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+            <div className="text-gray-400 text-5xl mb-4">🚗</div>
+            <h3 className="text-lg font-medium text-gray-700 mb-2">
+              No bookings yet
             </h3>
-            <p className="text-gray-500 text-sm mb-6">
-              You haven&apos;t booked any cars yet. Start exploring and book
-              your first ride!
+            <p className="text-gray-500 mb-6">
+              You haven&apos;t made any bookings. Start exploring available
+              cars!
             </p>
             <Link
               href="/explore-cars"
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold shadow-md shadow-blue-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+              className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
             >
               Explore Cars
             </Link>
           </div>
         )}
 
-        <div className="space-y-4">
-          {bookings.map((booking, index) => (
-            <div
-              key={booking._id || index}
-              className="animate-fade-up group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-blue-100/40 hover:-translate-y-1 hover:border-blue-100 transition-all duration-300"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="flex flex-col sm:flex-row">
-                <div className="sm:w-48 h-40 sm:h-auto bg-gradient-to-br from-blue-100 to-indigo-100 relative flex-shrink-0 overflow-hidden">
-                  {booking.carImage ? (
-                    <Image
-                      src={booking.carImage}
-                      alt={booking.carName}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      sizes="(max-width: 640px) 100vw, 192px"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-12 h-12 text-blue-300"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={1.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M8 17h.01M16 17h.01M3 11l1.5-5A2 2 0 016.4 4h11.2a2 2 0 011.9 1.4L21 11M3 11v6a1 1 0 001 1h1a1 1 0 001-1v-1h12v1a1 1 0 001 1h1a1 1 0 001-1v-6M3 11h18"
-                        />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex-1 p-5 sm:p-6 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div>
-                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-700 transition-colors duration-200">
-                          {booking.carName}
-                        </h3>
-                        <p className="text-sm text-gray-500 mt-0.5">
-                          Booked by{" "}
-                          <span className="font-medium text-gray-700">
-                            {booking.userName}
-                          </span>
-                        </p>
-                      </div>
-                      <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-xs font-semibold rounded-lg border border-emerald-100 flex-shrink-0 group-hover:bg-emerald-100 group-hover:scale-105 transition-all duration-200">
-                        Confirmed
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
-                      <div className="bg-gray-50 rounded-xl p-3 group-hover:bg-blue-50 transition-colors duration-200">
-                        <p className="text-xs text-gray-500 mb-0.5">
-                          Total Price
-                        </p>
-                        <p className="text-sm font-bold text-gray-900 group-hover:text-blue-700 transition-colors duration-200">
-                          ${booking.dailyRentPrice}
-                          <span className="text-xs font-normal text-gray-400">
-                            /day
-                          </span>
-                        </p>
-                      </div>
-                      <div className="bg-gray-50 rounded-xl p-3 group-hover:bg-blue-50 transition-colors duration-200">
-                        <p className="text-xs text-gray-500 mb-0.5">
-                          Booking Date
-                        </p>
-                        <Link
-                          href={`/explore-cars/${booking.carId}`}
-                          className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors duration-200"
-                        >
-                          {booking.bookingDate
-                            ? new Date(booking.bookingDate).toLocaleDateString(
-                                "en-US",
-                                {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                },
-                              )
-                            : "N/A"}
-                        </Link>
-                      </div>
-                      <div className="bg-gray-50 rounded-xl p-3 group-hover:bg-blue-50 transition-colors duration-200">
-                        <p className="text-xs text-gray-500 mb-0.5">Driver</p>
-                        <p className="text-sm font-semibold text-gray-900">
-                          {booking.driverNeeded ? (
-                            <span className="text-amber-600">Requested</span>
-                          ) : (
-                            <span className="text-gray-500">Not Needed</span>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-
-                    {booking.specialNote && (
-                      <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 hover:bg-amber-100/80 transition-colors duration-200">
-                        <p className="text-xs text-amber-600 font-medium mb-0.5">
-                          Special Note
-                        </p>
-                        <p className="text-sm text-gray-700">
-                          {booking.specialNote}
-                        </p>
+        {!loading && bookings.length > 0 && (
+          <div className="space-y-4">
+            {bookings.map((booking) => (
+              <div
+                key={booking._id}
+                className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+              >
+                <div className="flex flex-col md:flex-row">
+                  <div className="md:w-56 h-48 md:h-auto relative bg-gray-100 shrink-0">
+                    {booking.carImage || booking.imageUrl ? (
+                      <Image
+                        src={booking.carImage || booking.imageUrl}
+                        alt={booking.carTitle || "Car"}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-4xl">
+                        🚗
                       </div>
                     )}
                   </div>
-
-                  <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100 group-hover:border-blue-50 transition-colors duration-300">
-                    <Link
-                      href={`/explore-cars/${booking.carId}`}
-                      className="group/link text-sm font-medium text-blue-600 hover:text-blue-700 hover:translate-x-1 transition-all duration-200"
-                    >
-                      View Car Details
-                      <span className="inline-block ml-1 group-hover/link:translate-x-1 transition-transform duration-200">
-                        →
+                  <div className="flex-1 p-5">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {booking.carTitle || booking.carName || "Car Rental"}
+                        </h3>
+                        {booking.carBrand && (
+                          <p className="text-sm text-gray-500">
+                            {booking.carBrand}
+                            {booking.category ? ` · ${booking.category}` : ""}
+                          </p>
+                        )}
+                      </div>
+                      <span
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                          booking.status === "Confirmed" ||
+                          booking.status === "confirmed"
+                            ? "bg-green-50 text-green-700 border border-green-200"
+                            : booking.status === "Cancelled" ||
+                                booking.status === "cancelled"
+                              ? "bg-red-50 text-red-700 border border-red-200"
+                              : "bg-yellow-50 text-yellow-700 border border-yellow-200"
+                        }`}
+                      >
+                        {booking.status || "Pending"}
                       </span>
-                    </Link>
+                    </div>
+                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div>
+                        <p className="text-xs text-gray-400 uppercase tracking-wide">
+                          Pick-up
+                        </p>
+                        <p className="text-sm font-medium text-gray-700">
+                          {formatDate(booking.startDate || booking.pickupDate)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400 uppercase tracking-wide">
+                          Drop-off
+                        </p>
+                        <p className="text-sm font-medium text-gray-700">
+                          {formatDate(booking.endDate || booking.dropoffDate)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400 uppercase tracking-wide">
+                          Total
+                        </p>
+                        <p className="text-sm font-bold text-gray-900">
+                          ${booking.totalPrice || booking.totalAmount || "N/A"}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {totalDays(
+                            booking.startDate || booking.pickupDate,
+                            booking.endDate || booking.dropoffDate,
+                          )}{" "}
+                          day(s)
+                        </p>
+                      </div>
+                    </div>
+                    {(booking.pickupLocation || booking.location) && (
+                      <div className="mt-3">
+                        <p className="text-xs text-gray-400 uppercase tracking-wide">
+                          Location
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {booking.pickupLocation || booking.location}
+                        </p>
+                      </div>
+                    )}
+                    <div className="mt-4 flex gap-3">
+                      {booking.status !== "Cancelled" &&
+                        booking.status !== "cancelled" && (
+                          <button
+                            onClick={() => handleCancel(booking._id)}
+                            className="px-4 py-2 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+                          >
+                            Cancel Booking
+                          </button>
+                        )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
-};
-
-export default MyBookingsPage;
+}
