@@ -10,7 +10,7 @@ const AvailableCars = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_SERVER_URL}/explore-cars`)
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/explore-cars`)
       .then((res) => res.json())
       .then((data) => {
         const available = data
@@ -25,7 +25,6 @@ const AvailableCars = () => {
   return (
     <section className="py-16 sm:py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
         <div className="text-center mb-12 animate-fade-up">
           <span className="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full uppercase tracking-wide mb-4 hover:scale-105 hover:bg-blue-200 transition-all duration-300 cursor-default">
             Available Now
@@ -51,7 +50,6 @@ const AvailableCars = () => {
                 className="animate-fade-up bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-xl hover:shadow-blue-100/50 hover:-translate-y-2 hover:border-blue-100 transition-all duration-300"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-
                 <div className="relative h-48 bg-gray-200 overflow-hidden">
                   <Image
                     src={car.image}

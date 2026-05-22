@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Spinner } from "@heroui/react";
 import { toast } from "react-toastify";
@@ -16,6 +17,7 @@ const carTypes = [
 ];
 
 const AddCarPage = () => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     carName: "",
@@ -29,14 +31,28 @@ const AddCarPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
+  const [authChecking, setAuthChecking] = useState(true);
+
+  useEffect(() => {
+    document.title = "Add New Car | DriveFleet";
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const { data } = await authClient.getSession();
-        setUser(data?.user || null);
+        const currentUser = data?.user || null;
+        setUser(currentUser);
+
+        if (!currentUser) {
+          router.push("/sign-in");
+          return;
+        }
       } catch (err) {
-        setUser(null);
+        router.push("/sign-in");
+        return;
+      } finally {
+        setAuthChecking(false);
       }
     };
     fetchUser();
@@ -52,12 +68,10 @@ const AddCarPage = () => {
     setSuccess("");
 
     try {
-
       const { data: tokenData } = await authClient.token();
-      console.log("Token:", tokenData);
       const token = tokenData?.token;
 
-      const res = await fetch(`${process.env.NEXT_SERVER_URL}/add-car`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/add-car`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +88,6 @@ const AddCarPage = () => {
       });
 
       const data = await res.json();
-      console.log("Response:", data);
 
       if (data.insertedId) {
         setSuccess("Car added successfully!");
@@ -104,9 +117,13 @@ const AddCarPage = () => {
     "w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-0 outline-none transition-colors";
   const labelClass = "block text-sm font-semibold text-gray-700 mb-2";
 
-  useEffect(() => {
-    document.title = "Add New Car | DriveFleet";
-  }, []);
+  if (authChecking || !user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Spinner size="lg" label="Checking authentication..." />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -132,7 +149,6 @@ const AddCarPage = () => {
           className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 space-y-6"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
             <div>
               <label className={labelClass}>Car Name *</label>
               <input

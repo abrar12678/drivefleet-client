@@ -12,9 +12,9 @@ const CarDetailsPage = async ({ params }) => {
 
   let car = null;
   try {
-    const res = await fetch(`${process.env.NEXT_SERVER_URL}/explore-cars/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/explore-cars/${id}`, {
       cache: "no-store",
-      headers: {
+      headers: { 
         Authorization: `Bearer ${token}`,
       },
     });

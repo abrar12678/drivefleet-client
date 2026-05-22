@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Spinner } from "@heroui/react";
 
 const MyBookingsPage = () => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,8 +22,16 @@ const MyBookingsPage = () => {
         const { data } = await authClient.getSession();
         const currentUser = data?.user || null;
         setUser(currentUser);
+
+        if (!currentUser) {
+          router.push("/sign-in");
+          return;
+        }
       } catch (err) {
-        setUser(null);
+        router.push("/sign-in");
+        return;
+      } finally {
+        setLoading(false);
       }
     };
     fetchUser();
@@ -36,7 +46,7 @@ const MyBookingsPage = () => {
         const token = tokenData?.token;
 
         const res = await fetch(
-          `${process.env.NEXT_SERVER_URL}/bookings?email=${user.email}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/bookings?email=${user.email}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -51,14 +61,12 @@ const MyBookingsPage = () => {
         }
       } catch (err) {
         console.error("Fetch bookings error:", err);
-      } finally {
-        setLoading(false);
       }
     };
     fetchBookings();
   }, [user]);
 
-  if (!user && loading) {
+  if (loading || !user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Spinner size="lg" label="Loading your bookings..." />
@@ -69,7 +77,7 @@ const MyBookingsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* ── Page Header ── */}
+        {/* Page Header */}
         <div className="animate-fade-up flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">

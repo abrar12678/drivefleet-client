@@ -26,7 +26,7 @@ const ExploreCarsPage = () => {
     if (search) params.set("search", search);
     if (typeFilter !== "All") params.set("type", typeFilter);
 
-    fetch(`${process.env.NEXT_SERVER_URL}/explore-cars?${params.toString()}`)
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/explore-cars?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => {
         setCars(data);
@@ -41,7 +41,6 @@ const ExploreCarsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
@@ -7,9 +8,11 @@ import { Spinner } from "@heroui/react";
 import { toast } from "react-toastify";
 
 const MyAddedCarsPage = () => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [authChecking, setAuthChecking] = useState(true);
 
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [updateCar, setUpdateCar] = useState(null);
@@ -29,9 +32,18 @@ const MyAddedCarsPage = () => {
     const fetchUser = async () => {
       try {
         const { data } = await authClient.getSession();
-        setUser(data?.user || null);
+        const currentUser = data?.user || null;
+        setUser(currentUser);
+
+        if (!currentUser) {
+          router.push("/sign-in");
+          return;
+        }
       } catch (err) {
-        setUser(null);
+        router.push("/sign-in");
+        return;
+      } finally {
+        setAuthChecking(false);
       }
     };
     fetchUser();
@@ -45,7 +57,7 @@ const MyAddedCarsPage = () => {
         const token = tokenData?.token;
 
         const res = await fetch(
-          `${process.env.NEXT_SERVER_URL}/my-cars?email=${user.email}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/my-cars?email=${user.email}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -90,19 +102,22 @@ const MyAddedCarsPage = () => {
       const token = tokenData?.token;
 
       const { _id, ...fields } = updateCar;
-      const res = await fetch(`${process.env.NEXT_SERVER_URL}/update-car/${_id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/update-car/${_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(fields),
         },
-        body: JSON.stringify(fields),
-      });
+      );
       if (res.ok) {
         setIsUpdateOpen(false);
         setUpdateCar(null);
         const refreshed = await fetch(
-          `${process.env.NEXT_SERVER_URL}/my-cars?email=${user.email}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/my-cars?email=${user.email}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -133,7 +148,7 @@ const MyAddedCarsPage = () => {
       const token = tokenData?.token;
 
       const res = await fetch(
-        `${process.env.NEXT_SERVER_URL}/delete-car/${deleteCar._id}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/delete-car/${deleteCar._id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -153,7 +168,7 @@ const MyAddedCarsPage = () => {
     }
   };
 
-  if (loading) {
+  if (loading || authChecking || !user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Spinner size="lg" label="Loading your cars..." />
@@ -164,7 +179,6 @@ const MyAddedCarsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-
         <div className="animate-fade-up flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
@@ -225,7 +239,7 @@ const MyAddedCarsPage = () => {
             </p>
             <Link
               href="/add-car"
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold shadow-md shadow-blue-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold shadow-md shadow-blue-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
             >
               Add Car
             </Link>
@@ -239,7 +253,6 @@ const MyAddedCarsPage = () => {
               className="animate-fade-up group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-blue-100/50 hover:-translate-y-2 hover:border-blue-100 transition-all duration-300"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-
               <div className="relative h-48 bg-gray-200 overflow-hidden">
                 <Image
                   src={car.image}
@@ -356,7 +369,6 @@ const MyAddedCarsPage = () => {
               </div>
             </div>
 
-            {/* Body */}
             <div className="px-6 py-5 space-y-4">
               {[
                 { label: "Image URL", key: "image", type: "url" },
@@ -493,7 +505,7 @@ const MyAddedCarsPage = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6 text-center">
-              <div className="w-16 h-16 mx-auto rounded-full bg-red-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 mx-auto rounded-full bg-red-100 flex items-center justify-center mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-8 h-8 text-red-500"
