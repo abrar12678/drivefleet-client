@@ -1,8 +1,6 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/use-auth";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,14 +8,55 @@ const SERVER = process.env.NEXT_PUBLIC_SERVER_URL;
 
 export default function MyBookingsPage() {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
-
+  const [user, setUser] = useState(null);
+  const [checking, setChecking] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ===== AUTH GUARD =====
-  if (authLoading) {
+  useEffect(() => {
+    console.log("[MY-BOOKINGS] Page loaded, fetching session...");
+    fetch("/api/auth/get-session")
+      .then((res) => {
+        console.log("[MY-BOOKINGS] Session status:", res.status);
+        return res.json();
+      })
+      .then((data) => {
+        console.log("[MY-BOOKINGS] Session data:", JSON.stringify(data));
+        if (data.user) {
+          console.log("[MY-BOOKINGS] User found:", data.user.email);
+          setUser(data.user);
+        } else {
+          console.log("[MY-BOOKINGS] NO USER in response");
+        }
+        setChecking(false);
+      })
+      .catch((err) => {
+        console.log("[MY-BOOKINGS] Fetch error:", err);
+        setChecking(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!checking && !user) {
+      console.log("[MY-BOOKINGS] Redirecting to sign-in");
+      router.push("/sign-in");
+    }
+  }, [checking, user, router]);
+
+  useEffect(() => {
+    if (!user) return;
+    setLoading(true);
+    fetch(`${SERVER}/api/bookings/my-bookings?userId=${user.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setBookings(data.bookings || data || []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [user]);
+
+  if (checking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-3">
@@ -28,72 +67,15 @@ export default function MyBookingsPage() {
     );
   }
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
-  // ===== FETCH BOOKINGS =====
-  useEffect(() => {
-    if (!user) return;
-
-    async function fetchBookings() {
-      setLoading(true);
-      setError("");
-      try {
-        const res = await fetch(
-          `${SERVER}/api/bookings/my-bookings?userId=${user.id}`,
-          {
-            headers: { "Content-Type": "application/json" },
-          },
-        );
-        const data = await res.json();
-        if (res.ok) {
-          setBookings(data.bookings || data || []);
-        } else {
-          setError(data.message || "Failed to load bookings.");
-        }
-      } catch (err) {
-        console.error("Fetch bookings error:", err);
-        setError("Something went wrong. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchBookings();
-  }, [user]);
-
-  const handleCancel = async (bookingId) => {
-    if (!confirm("Are you sure you want to cancel this booking?")) return;
-    try {
-      const res = await fetch(`${SERVER}/api/bookings/${bookingId}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setBookings((prev) => prev.filter((b) => b._id !== bookingId));
-      } else {
-        alert(data.message || "Failed to cancel booking.");
-      }
-    } catch (err) {
-      alert("Something went wrong.");
-    }
-  };
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "N/A";
-    return new Date(dateStr).toLocaleDateString("en-US", {
+  const formatDate = (d) => {
+    if (!d) return "N/A";
+    return new Date(d).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
     });
-  };
-
-  const totalDays = (start, end) => {
-    if (!start || !end) return 1;
-    const diff = new Date(end) - new Date(start);
-    return Math.max(1, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   };
 
   return (
@@ -124,38 +106,37 @@ export default function MyBookingsPage() {
           </div>
         )}
 
-        {!loading && !error && bookings.length === 0 && (
+        {!loading && bookings.length === 0 && (
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
             <div className="text-gray-400 text-5xl mb-4">🚗</div>
             <h3 className="text-lg font-medium text-gray-700 mb-2">
               No bookings yet
             </h3>
             <p className="text-gray-500 mb-6">
-              You haven&apos;t made any bookings. Start exploring available
-              cars!
+              Start exploring available cars!
             </p>
             <Link
               href="/explore-cars"
-              className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700"
             >
               Explore Cars
             </Link>
           </div>
         )}
 
-        {!loading && bookings.length > 0 && (
+        {bookings.length > 0 && (
           <div className="space-y-4">
-            {bookings.map((booking) => (
+            {bookings.map((b) => (
               <div
-                key={booking._id}
+                key={b._id}
                 className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
               >
                 <div className="flex flex-col md:flex-row">
                   <div className="md:w-56 h-48 md:h-auto relative bg-gray-100 shrink-0">
-                    {booking.carImage || booking.imageUrl ? (
+                    {b.carImage || b.imageUrl ? (
                       <Image
-                        src={booking.carImage || booking.imageUrl}
-                        alt={booking.carTitle || "Car"}
+                        src={b.carImage || b.imageUrl}
+                        alt={b.carTitle || "Car"}
                         fill
                         className="object-cover"
                         unoptimized
@@ -170,27 +151,26 @@ export default function MyBookingsPage() {
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          {booking.carTitle || booking.carName || "Car Rental"}
+                          {b.carTitle || b.carName || "Car Rental"}
                         </h3>
-                        {booking.carBrand && (
+                        {b.carBrand && (
                           <p className="text-sm text-gray-500">
-                            {booking.carBrand}
-                            {booking.category ? ` · ${booking.category}` : ""}
+                            {b.carBrand}
+                            {b.category ? ` · ${b.category}` : ""}
                           </p>
                         )}
                       </div>
                       <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                          booking.status === "Confirmed" ||
-                          booking.status === "confirmed"
+                          b.status === "Confirmed" || b.status === "confirmed"
                             ? "bg-green-50 text-green-700 border border-green-200"
-                            : booking.status === "Cancelled" ||
-                                booking.status === "cancelled"
+                            : b.status === "Cancelled" ||
+                                b.status === "cancelled"
                               ? "bg-red-50 text-red-700 border border-red-200"
                               : "bg-yellow-50 text-yellow-700 border border-yellow-200"
                         }`}
                       >
-                        {booking.status || "Pending"}
+                        {b.status || "Pending"}
                       </span>
                     </div>
                     <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -199,7 +179,7 @@ export default function MyBookingsPage() {
                           Pick-up
                         </p>
                         <p className="text-sm font-medium text-gray-700">
-                          {formatDate(booking.startDate || booking.pickupDate)}
+                          {formatDate(b.startDate || b.pickupDate)}
                         </p>
                       </div>
                       <div>
@@ -207,7 +187,7 @@ export default function MyBookingsPage() {
                           Drop-off
                         </p>
                         <p className="text-sm font-medium text-gray-700">
-                          {formatDate(booking.endDate || booking.dropoffDate)}
+                          {formatDate(b.endDate || b.dropoffDate)}
                         </p>
                       </div>
                       <div>
@@ -215,37 +195,9 @@ export default function MyBookingsPage() {
                           Total
                         </p>
                         <p className="text-sm font-bold text-gray-900">
-                          ${booking.totalPrice || booking.totalAmount || "N/A"}
-                        </p>
-                        <p className="text-xs text-gray-400">
-                          {totalDays(
-                            booking.startDate || booking.pickupDate,
-                            booking.endDate || booking.dropoffDate,
-                          )}{" "}
-                          day(s)
+                          ${b.totalPrice || b.totalAmount || "N/A"}
                         </p>
                       </div>
-                    </div>
-                    {(booking.pickupLocation || booking.location) && (
-                      <div className="mt-3">
-                        <p className="text-xs text-gray-400 uppercase tracking-wide">
-                          Location
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {booking.pickupLocation || booking.location}
-                        </p>
-                      </div>
-                    )}
-                    <div className="mt-4 flex gap-3">
-                      {booking.status !== "Cancelled" &&
-                        booking.status !== "cancelled" && (
-                          <button
-                            onClick={() => handleCancel(booking._id)}
-                            className="px-4 py-2 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
-                          >
-                            Cancel Booking
-                          </button>
-                        )}
                     </div>
                   </div>
                 </div>

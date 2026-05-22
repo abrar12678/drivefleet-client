@@ -9,8 +9,6 @@ export function useAuth() {
 
   useEffect(() => {
     let cancelled = false;
-    let retries = 0;
-    const maxRetries = 3;
 
     async function checkSession() {
       try {
@@ -20,30 +18,16 @@ export function useAuth() {
         });
         const data = await res.json();
 
-        console.log("[AUTH DEBUG] get-session status:", res.status);
-        console.log("[AUTH DEBUG] get-session response:", JSON.stringify(data));
+        console.log("[AUTH DEBUG] response:", JSON.stringify(data));
 
         if (!cancelled) {
-          if (data?.data?.user) {
-            console.log("[AUTH DEBUG] User found:", data.data.user.email);
-            setUser(data.data.user);
-          } else {
-            console.log(
-              "[AUTH DEBUG] No user in session. data is:",
-              data?.data,
-            );
-            // Retry if no session found (cookies might not be set yet)
-            if (retries < maxRetries) {
-              retries++;
-              console.log("[AUTH DEBUG] Retrying... attempt", retries);
-              setTimeout(checkSession, 1000);
-              return;
-            }
+          if (data?.user) {
+            setUser(data.user);
           }
           setLoading(false);
         }
       } catch (err) {
-        console.error("[AUTH DEBUG] Session check error:", err);
+        console.error("[AUTH DEBUG] error:", err);
         if (!cancelled) setLoading(false);
       }
     }
@@ -57,7 +41,6 @@ export function useAuth() {
   useEffect(() => {
     if (loading) return;
     if (!user) {
-      console.log("[AUTH DEBUG] No user after loading, redirecting to sign-in");
       router.push("/sign-in");
     }
   }, [user, loading, router]);
