@@ -54,7 +54,12 @@ const SignUpPage = () => {
       router.push("/");
       router.refresh();
     }
-    if (error) alert("Error");
+    if (error)
+      alert(
+        data?.error ||
+          data?.message ||
+          "Sign-up failed. Try a different email or check your password (min 8 characters).",
+      );
   };
 
   const handleGoogleSignin = async () => {

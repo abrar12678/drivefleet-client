@@ -30,21 +30,30 @@ const BookingModal = ({ car, user, isOpen, onClose }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/bookings`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          carId: car._id,
-          carName: car.carName,
-          carImage: car.image,
-          userEmail: user.email,
-          userName: user.name,
-          dailyRentPrice: car.dailyRentPrice,
-          driverNeeded,
-          specialNote,
-          bookingDate: new Date().toISOString(),
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/bookings`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            carId: car._id,
+            carName: car.carName,
+            carImage: car.image,
+            userEmail: user.email,
+            userName: user.name,
+            dailyRentPrice: car.dailyRentPrice,
+            totalPrice: car.dailyRentPrice,
+            startDate: new Date().toISOString(),
+            endDate: new Date(Date.now() + 86400000).toISOString(),
+            driverNeeded,
+            specialNote,
+            bookingDate: new Date().toISOString(),
+            status: "Confirmed",
+            pickupLocation: car.pickupLocation || "",
+          }),
+        },
+      );
       if (res.ok) {
         onClose();
         toast.success("Car booked successfully!");

@@ -31,7 +31,7 @@ export default function MyBookingsPage() {
   useEffect(() => {
     if (!user) return;
     setLoading(true);
-    fetch(`${SERVER}/api/bookings/my-bookings?userId=${user.id}`)
+    fetch(`${SERVER}/bookings?email=${user.email}`)
       .then((r) => r.json())
       .then((d) => {
         setBookings(d.bookings || d || []);
@@ -203,30 +203,6 @@ export default function MyBookingsPage() {
                         </p>
                       </div>
                     )}
-                    <div className="mt-4 flex gap-3">
-                      {b.status !== "Cancelled" && b.status !== "cancelled" && (
-                        <button
-                          onClick={() => {
-                            if (!confirm("Cancel this booking?")) return;
-                            fetch(`${SERVER}/api/bookings/${b._id}`, {
-                              method: "DELETE",
-                              headers: { "Content-Type": "application/json" },
-                            })
-                              .then((r) => r.json())
-                              .then((d) => {
-                                if (r.ok)
-                                  setBookings((prev) =>
-                                    prev.filter((x) => x._id !== b._id),
-                                  );
-                                else alert(d.message || "Failed");
-                              });
-                          }}
-                          className="px-4 py-2 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
-                        >
-                          Cancel Booking
-                        </button>
-                      )}
-                    </div>
                   </div>
                 </div>
               </div>

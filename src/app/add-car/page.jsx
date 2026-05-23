@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/use-auth";
 import Image from "next/image";
@@ -82,15 +82,25 @@ export default function AddCarPage() {
     }
     setSubmitting(true);
     try {
-      const res = await fetch(`${SERVER}/api/cars`, {
+      const res = await fetch(`${SERVER}/add-car`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...form,
-          pricePerDay: Number(form.pricePerDay),
-          seats: Number(form.seats) || 5,
+          carName: form.title,
+          carBrand: form.brand,
+          carType: form.category,
+          dailyRentPrice: Number(form.pricePerDay),
+          pickupLocation: form.location,
+          fuelType: form.fuelType,
+          seatCapacity: Number(form.seats) || 5,
+          transmission: form.transmission,
+          description: form.description,
+          image: form.imageUrl,
+          availability: true,
+          bookingCount: 0,
           addedBy: user.id,
           addedByName: user.name || user.email,
+          addedByEmail: user.email,
         }),
       });
       const data = await res.json();
