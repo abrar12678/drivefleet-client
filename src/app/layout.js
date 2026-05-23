@@ -1,59 +1,23 @@
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
-  subsets: ["latin"],
-  display: "swap",
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: {
-    default: "DriveFleet — Premium Car Rental",
-    template: "%s | DriveFleet",
-  },
+  title: "DriveFleet — Premium Car Rental Platform",
   description:
-    "DriveFleet — Find and rent premium cars at the best prices. Browse, book, and drive today.",
+    "Discover the perfect ride for every journey. DriveFleet connects you with premium vehicles at unbeatable prices.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${jakarta.variable} h-full antialiased`}
-    >
-      <head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1"
-        />
-      </head>
-      <body className="min-h-full flex flex-col font-sans overflow-x-hidden">
+    <html lang="en">
+      <body className={inter.className}>
         <Navbar />
-        <main className="flex-grow">{children}</main>
+        <main>{children}</main>
         <Footer />
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
       </body>
     </html>
   );
