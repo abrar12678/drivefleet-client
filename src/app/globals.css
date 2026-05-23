@@ -1,8 +1,12 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
-@theme {
+html,
+body {
+  overflow-x: hidden;
+}
 
+@theme {
   --font-sans:
     var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-heading:
@@ -20,7 +24,6 @@ body {
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
-
 
 h1,
 h2,

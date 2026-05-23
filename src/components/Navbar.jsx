@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,7 +26,7 @@ const Navbar = () => {
       href: "/add-car",
       icon: (
         <svg
-          className="w-4.5 h-4.5"
+          className="w-4 h-4"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -46,7 +45,7 @@ const Navbar = () => {
       href: "/my-bookings",
       icon: (
         <svg
-          className="w-4.5 h-4.5"
+          className="w-4 h-4"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -65,7 +64,7 @@ const Navbar = () => {
       href: "/my-added-cars",
       icon: (
         <svg
-          className="w-4.5 h-4.5"
+          className="w-4 h-4"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -91,7 +90,8 @@ const Navbar = () => {
 
   const fetchSession = async () => {
     try {
-      const { data } = await authClient.getSession();
+      const res = await fetch("/api/auth/get-session");
+      const data = await res.json();
       setUser(data?.user || null);
     } catch {
       setUser(null);
@@ -120,7 +120,9 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = async () => {
-    await authClient.signOut();
+    try {
+      await fetch("/api/auth/sign-out", { method: "POST" });
+    } catch {}
     setUser(null);
     setDropdownOpen(false);
   };
@@ -199,19 +201,15 @@ const Navbar = () => {
         mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
       }`}
     >
-      {mounted && (
-        <style>{`.animate-nav{animation:slideDown .5s ease-out forwards}`}</style>
-      )}
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-[72px]">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-[72px]">
           <Link
             href="/"
-            className="group flex items-center gap-2.5 select-none"
+            className="group flex items-center gap-2 sm:gap-2.5 select-none"
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-md shadow-blue-200 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-blue-300/50 group-hover:rotate-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-md shadow-blue-200 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-blue-300/50 group-hover:rotate-3">
               <svg
-                className="w-5 h-5 text-white"
+                className="w-4 h-4 sm:w-5 sm:h-5 text-white"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -224,13 +222,9 @@ const Navbar = () => {
                 <circle cx="17" cy="17" r="2" />
               </svg>
             </div>
-            <span className="text-[1.35rem] font-extrabold tracking-tight transition-all duration-300 group-hover:tracking-wide">
-              <span className="text-gray-900 transition-colors duration-300 group-hover:text-blue-900">
-                Drive
-              </span>
-              <span className="text-blue-600 transition-colors duration-300 group-hover:text-blue-500">
-                Fleet
-              </span>
+            <span className="text-xl sm:text-[1.35rem] font-extrabold tracking-tight transition-all duration-300 group-hover:tracking-wide">
+              <span className="text-gray-900">Drive</span>
+              <span className="text-blue-600">Fleet</span>
             </span>
           </Link>
 
@@ -247,11 +241,7 @@ const Navbar = () => {
               >
                 <span className="relative z-10">{link.name}</span>
                 {isActive(link.href) && (
-                  <span className="absolute bottom-[-2px] left-1/2 -translate-x-1/2 h-[3px] bg-blue-600 rounded-full animate-underline" />
-                )}
-                {/* Hover glow behind active link */}
-                {isActive(link.href) && (
-                  <span className="absolute inset-0 rounded-lg bg-blue-50/40 scale-110 blur-sm -z-10" />
+                  <span className="absolute bottom-[-2px] left-1/2 -translate-x-1/2 h-[3px] bg-blue-600 rounded-full" />
                 )}
               </Link>
             ))}
@@ -272,9 +262,9 @@ const Navbar = () => {
                       "https://ui-avatars.com/api/?name=User&background=4F46E5&color=fff"
                     }
                     alt={user.name}
-                    className="w-8 h-8 rounded-lg object-cover ring-1 ring-gray-200 transition-all duration-200 group-hover/profile:ring-2 group-hover/profile:ring-blue-300 group-hover/profile:scale-105"
+                    className="w-8 h-8 rounded-lg object-cover ring-1 ring-gray-200"
                   />
-                  <span className="text-sm font-semibold text-gray-700 max-w-[120px] truncate transition-colors duration-200 group-hover/profile:text-gray-900">
+                  <span className="text-sm font-semibold text-gray-700 max-w-[120px] truncate">
                     {user.name}
                   </span>
                   <svg
@@ -295,7 +285,7 @@ const Navbar = () => {
                 <div
                   className={`absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 origin-top-right ${
                     dropdownOpen
-                      ? "opacity-100 scale-100 pointer-events-auto animate-dropdown-in"
+                      ? "opacity-100 scale-100 pointer-events-auto"
                       : "opacity-0 scale-95 pointer-events-none"
                   } transition-all duration-200`}
                 >
@@ -307,31 +297,24 @@ const Navbar = () => {
                       {user.email}
                     </p>
                   </div>
-
-                  {dropdownLinks.map((link, i) => (
+                  {dropdownLinks.map((link) => (
                     <Link
                       key={link.name}
                       href={link.href}
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50/60 hover:text-blue-700 hover:pl-5 transition-all duration-200"
-                      style={
-                        dropdownOpen ? { animationDelay: `${i * 50}ms` } : {}
-                      }
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50/60 hover:text-blue-700 transition-all duration-200"
                     >
-                      <span className="transition-transform duration-200 group-hover:scale-110">
-                        {link.icon}
-                      </span>
+                      {link.icon}
                       {link.name}
                     </Link>
                   ))}
-
                   <div className="border-t border-gray-100 mt-1 pt-1">
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 hover:text-red-600 hover:pl-5 transition-all duration-200"
+                      className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
                     >
                       <svg
-                        className="w-4.5 h-4.5"
+                        className="w-4 h-4"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -352,13 +335,13 @@ const Navbar = () => {
               <>
                 <Link
                   href="/sign-in"
-                  className="px-5 py-2.5 text-[0.9rem] font-semibold text-gray-700 rounded-xl border border-gray-200 hover:bg-white hover:border-blue-200 hover:text-blue-700 hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-100/40 active:scale-95 transition-all duration-200"
+                  className="px-5 py-2.5 text-[0.9rem] font-semibold text-gray-700 rounded-xl border border-gray-200 hover:bg-white hover:border-blue-200 hover:text-blue-700 transition-all duration-200"
                 >
                   Login
                 </Link>
                 <Link
                   href="/sign-up"
-                  className="px-5 py-2.5 text-[0.9rem] font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-md shadow-blue-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-300/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+                  className="px-5 py-2.5 text-[0.9rem] font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-md shadow-blue-200 transition-all duration-200"
                 >
                   Sign Up
                 </Link>
@@ -368,53 +351,39 @@ const Navbar = () => {
 
           <button
             onClick={toggleMenu}
-            className="lg:hidden relative w-10 h-10 flex items-center justify-center rounded-xl text-gray-600 hover:bg-blue-50 hover:text-blue-600 hover:scale-110 active:scale-95 transition-all duration-200"
+            className="lg:hidden relative w-10 h-10 flex items-center justify-center rounded-xl text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200"
             aria-label="Toggle navigation menu"
           >
             <div className="flex flex-col items-center justify-center gap-[5px]">
               <span
-                className={`block w-5 h-[2.5px] rounded-full bg-current transition-all duration-300 ${
-                  mobileMenuOpen
-                    ? "rotate-45 translate-y-[7px]"
-                    : "rotate-0 translate-y-0"
-                }`}
+                className={`block w-5 h-[2.5px] rounded-full bg-current transition-all duration-300 ${mobileMenuOpen ? "rotate-45 translate-y-[7px]" : "rotate-0 translate-y-0"}`}
               />
               <span
-                className={`block w-5 h-[2.5px] rounded-full bg-current transition-all duration-300 ${
-                  mobileMenuOpen
-                    ? "-rotate-45 -translate-y-[7px]"
-                    : "rotate-0 translate-y-0"
-                }`}
+                className={`block w-5 h-[2.5px] rounded-full bg-current transition-all duration-300 ${mobileMenuOpen ? "-rotate-45 -translate-y-[7px]" : "rotate-0 translate-y-0"}`}
               />
             </div>
           </button>
         </div>
       </div>
 
+      {/* Mobile Menu */}
       <div
-        className={`lg:hidden fixed inset-0 z-40 transition-all duration-300 ${
-          mobileMenuOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
+        className={`lg:hidden fixed inset-0 z-40 transition-all duration-300 ${mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
       >
         <div
           className="absolute inset-0 bg-black/20 backdrop-blur-sm"
           onClick={closeMenu}
         />
-
         <div
-          className={`absolute top-0 right-0 w-[300px] max-w-[85vw] h-full bg-white shadow-2xl transition-transform duration-300 ease-out ${
-            mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+          className={`absolute top-0 right-0 w-[280px] max-w-[80vw] h-full bg-white shadow-2xl transition-transform duration-300 ease-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
         >
-          <div className="flex items-center justify-between px-5 h-[72px] border-b border-gray-100">
+          <div className="flex items-center justify-between px-4 h-14 sm:h-[72px] border-b border-gray-100">
             <Link
               href="/"
               onClick={closeMenu}
               className="group flex items-center gap-2 select-none"
             >
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
                 <svg
                   className="w-4 h-4 text-white"
                   viewBox="0 0 24 24"
@@ -436,7 +405,7 @@ const Navbar = () => {
             </Link>
             <button
               onClick={closeMenu}
-              className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 hover:rotate-90 transition-all duration-300"
+              className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all duration-300"
               aria-label="Close menu"
             >
               <svg
@@ -456,7 +425,7 @@ const Navbar = () => {
           </div>
 
           {user && (
-            <div className="px-5 py-4 border-b border-gray-100">
+            <div className="px-4 py-3 border-b border-gray-100">
               <div className="flex items-center gap-3">
                 <img
                   src={
@@ -464,7 +433,7 @@ const Navbar = () => {
                     "https://ui-avatars.com/api/?name=User&background=4F46E5&color=fff"
                   }
                   alt={user.name}
-                  className="w-10 h-10 rounded-xl object-cover ring-2 ring-blue-100 transition-transform duration-200 hover:scale-105"
+                  className="w-10 h-10 rounded-xl object-cover ring-2 ring-blue-100"
                 />
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-gray-900 truncate">
@@ -476,44 +445,26 @@ const Navbar = () => {
             </div>
           )}
 
-          <div className="px-3 py-4 space-y-1">
-            {navLinks.map((link, index) => (
+          <div
+            className="px-3 py-3 space-y-1 overflow-y-auto"
+            style={{ maxHeight: "calc(100vh - 200px)" }}
+          >
+            {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
                 onClick={closeMenu}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[0.95rem] font-medium transition-all duration-200 ${
-                  isActive(link.href)
-                    ? "bg-blue-50 text-blue-700 shadow-sm shadow-blue-100/50"
-                    : "text-gray-600 hover:bg-blue-50/60 hover:text-blue-600 hover:-translate-y-0.5 hover:shadow-sm hover:shadow-blue-100/30"
-                } ${mobileMenuOpen ? "animate-fade-slide-right" : ""}`}
-                style={
-                  mobileMenuOpen
-                    ? { animationDelay: `${index * 60 + 100}ms` }
-                    : {}
-                }
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${isActive(link.href) ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:bg-blue-50/60 hover:text-blue-600"}`}
               >
-                <span className="transition-transform duration-200 group-hover:scale-110">
-                  {linkIcon(link.name)}
-                </span>
+                {linkIcon(link.name)}
                 {link.name}
               </Link>
             ))}
-
             {user && (
               <Link
                 href="/my-added-cars"
                 onClick={closeMenu}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[0.95rem] font-medium transition-all duration-200 ${
-                  isActive("/my-added-cars")
-                    ? "bg-blue-50 text-blue-700 shadow-sm shadow-blue-100/50"
-                    : "text-gray-600 hover:bg-blue-50/60 hover:text-blue-600 hover:-translate-y-0.5 hover:shadow-sm hover:shadow-blue-100/30"
-                } ${mobileMenuOpen ? "animate-fade-slide-right" : ""}`}
-                style={
-                  mobileMenuOpen
-                    ? { animationDelay: `${navLinks.length * 60 + 100}ms` }
-                    : {}
-                }
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${isActive("/my-added-cars") ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:bg-blue-50/60 hover:text-blue-600"}`}
               >
                 <svg
                   className="w-5 h-5"
@@ -534,17 +485,14 @@ const Navbar = () => {
           </div>
 
           <div className="mx-5 border-t border-gray-100" />
-          <div
-            className={`px-5 py-5 ${mobileMenuOpen ? "animate-fade-slide-right" : ""}`}
-            style={mobileMenuOpen ? { animationDelay: "500ms" } : {}}
-          >
+          <div className="px-5 py-4">
             {user ? (
               <button
                 onClick={() => {
                   handleLogout();
                   closeMenu();
                 }}
-                className="flex items-center justify-center gap-2 w-full px-5 py-3 text-[0.95rem] font-semibold text-red-500 rounded-xl border-2 border-red-200 hover:bg-red-50 hover:text-red-600 hover:border-red-300 hover:-translate-y-0.5 hover:shadow-md hover:shadow-red-100/40 active:scale-[0.98] transition-all duration-200"
+                className="flex items-center justify-center gap-2 w-full px-5 py-3 text-sm font-semibold text-red-500 rounded-xl border-2 border-red-200 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
               >
                 <svg
                   className="w-5 h-5"
@@ -566,14 +514,14 @@ const Navbar = () => {
                 <Link
                   href="/sign-in"
                   onClick={closeMenu}
-                  className="block w-full text-center px-5 py-3 text-[0.95rem] font-semibold text-gray-700 rounded-xl border-2 border-gray-200 hover:bg-white hover:border-blue-200 hover:text-blue-700 hover:-translate-y-0.5 hover:shadow-md hover:shadow-blue-100/40 active:scale-[0.98] transition-all duration-200"
+                  className="block w-full text-center px-5 py-3 text-sm font-semibold text-gray-700 rounded-xl border-2 border-gray-200 hover:bg-white hover:border-blue-200 hover:text-blue-700 transition-all duration-200"
                 >
                   Login
                 </Link>
                 <Link
                   href="/sign-up"
                   onClick={closeMenu}
-                  className="block w-full text-center px-5 py-3 text-[0.95rem] font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-md shadow-blue-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-300/50 active:scale-[0.98] transition-all duration-200"
+                  className="block w-full text-center px-5 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-md shadow-blue-200 transition-all duration-200"
                 >
                   Sign Up
                 </Link>
