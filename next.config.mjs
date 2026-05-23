@@ -1,14 +1,40 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactCompiler: true,
-  images: {
-    remotePatterns: [
+  // ... any existing config you have ...
+
+  async headers() {
+    return [
       {
-        protocol: "https",
-        hostname: "**",
-        pathname: "**",
+        source: "/my-bookings",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, max-age=0, must-revalidate",
+          },
+          { key: "Pragma", value: "no-cache" },
+        ],
       },
-    ],
+      {
+        source: "/add-car",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, max-age=0, must-revalidate",
+          },
+          { key: "Pragma", value: "no-cache" },
+        ],
+      },
+      {
+        source: "/my-added-cars",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, max-age=0, must-revalidate",
+          },
+          { key: "Pragma", value: "no-cache" },
+        ],
+      },
+    ];
   },
 };
 
